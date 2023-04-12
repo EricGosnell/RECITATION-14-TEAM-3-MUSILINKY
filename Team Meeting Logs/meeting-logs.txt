@@ -1,0 +1,22 @@
+Minutes of the Meeting - 4/12/23
+
+1. Decisions made
+
+  We’re making a music app called Musalinky. We are planning to use two external API’s. One will be a music API called Deezer and the other will be a Google search API.
+  The Deezer API will allow users to perform search queries via albums, genres, songs, or artists. The Deezer API will also be used to provide links to these items on
+  the Deezer website.
+  
+  The Google search API will be used to provide links to songs or albums on other platforms. This is our main feature, and will allow users to listen to songs or
+  albums if they do not have a particular platform. After the Google search API is called, the results could be displayed to the user in a table or some other fashion.
+  
+  If possible and if time permits, we could also add features that allow users to create playlists and interact with friends and communities.
+  
+2. Alternative Actions Discussed
+
+  Start with the skeleton code. Then we can split up and have some members work on the backend while the others work on the frontend and the user interface.
+  
+3. Follow-up items, including agreed-on roles and responsibilities
+
+  Make a project board with epics and user stories for future meetings. Tie into GitHub repository.
+  Add release notes for future meetings.
+  Release notes can be automated or manual.
