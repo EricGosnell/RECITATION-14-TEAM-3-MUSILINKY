@@ -66,6 +66,10 @@ const user = {
 // *****************************************************
 // <!-- Section 4 : API Routes -->
 // *****************************************************
+app.get('/welcome', (req, res) => {
+    res.json({status: 'success', message: 'Welcome!'});
+});
+
 app.get('/', (req, res) => {
     res.redirect('/login'); //this will call the /anotherRoute route in the API
 });
@@ -148,5 +152,5 @@ app.get('/logout', (req,res) => {
 // <!-- Section 5 : Start Server-->
 // *****************************************************
 // starting the server and keeping the connection open to listen for more requests
-app.listen(3000);
+module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
