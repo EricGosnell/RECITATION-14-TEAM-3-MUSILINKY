@@ -177,12 +177,12 @@ app.get('/search', (req, res) => {
     });
 });
 
-app.get('/search', (req, res) => {
+app.POST('/search', (req, res) => {
 
     const search_query = `${req.query.search_query}`;
 
     axios({
-        method: 'GET',
+        method: 'POST',
         url: 'https://musicapi13.p.rapidapi.com/inspect/url',
         headers: {
             'content-type': 'application/json',
