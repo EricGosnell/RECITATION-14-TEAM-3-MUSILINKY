@@ -148,6 +148,35 @@ app.get('/logout', (req,res) => {
     res.render('pages/login');
 });
 
+// Search - GET (user Deezer API)
+app.get('/search', (req, res) => {
+
+    const search_query = `${req.query.search_query}`;
+
+    axios({
+        method: 'GET',
+        url: 'https://deezerdevs-deezer.p.rapidapi.com/search',
+        headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
+        },
+        params: {
+            q: search_query
+        }
+    })
+
+    .then(results => {
+        console.log(results.data);
+        res.json({message: 'Successfully retrieved data'});
+        res.render('pages/home', {items: results.data.data, error: false, username: user.username});
+    })
+
+    .catch(error => {
+        console.error(error);
+        res.render('pages/home', {items: [], error: true, message: 'Could not retrieve results', username: user.username});
+    });
+});
+
 // *****************************************************
 // <!-- Section 5 : Start Server-->
 // *****************************************************

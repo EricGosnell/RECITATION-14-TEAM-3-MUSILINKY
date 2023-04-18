@@ -42,4 +42,34 @@ describe('Login', () => {
       });
   });
 
+  // ===================================================
+  // Deezer API Positive Test Case
+  it('positive : /search', done => {
+  chai
+    .request(server)
+    .get('/search')
+    .send({search_query: 'Linkin Park'})
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      expect(res.body.message).to.equals('Successfully retrieved data');
+      done();
+    });
+});
+
+// ========================================================
+// MUSALINK API Negative Test Case 
+it('Negative : /MUSALINK', done => {
+  chai
+    .request(server)
+    .get('/MUSALINK')
+    .send({musalink_query: 'https://open.spotify.com/track/random'})
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      expect(res.body.message).to.equals('Invalid URL');
+      done();
+    });
+});
+
+
+
 });
