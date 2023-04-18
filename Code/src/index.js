@@ -177,7 +177,7 @@ app.get('/search', (req, res) => {
     });
 });
 
-app.POST('/search', (req, res) => {
+app.POST('/search-music', (req, res) => {
 
     const search_query = `${req.query.search_query}`;
 
