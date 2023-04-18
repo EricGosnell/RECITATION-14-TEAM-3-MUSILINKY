@@ -177,6 +177,36 @@ app.get('/search', (req, res) => {
     });
 });
 
+app.get('/search', (req, res) => {
+
+    const search_query = `${req.query.search_query}`;
+
+    axios({
+        method: 'GET',
+        url: 'https://musicapi13.p.rapidapi.com/inspect/url',
+        headers: {
+            'content-type': 'application/json',
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'musicapi13.p.rapidapi.com'
+        },
+        data: '{"url":"https://open.spotify.com/track/5aszL9hl6SBzFNsOvw8u8w"}',
+        params: {
+            q: search_query
+        }
+    })
+
+    .then(results => {
+        console.log(results.data);
+        res.json({message: 'Successfully retrieved data'});
+        res.render('pages/home', {items: results.data.data, error: false, username: user.username});
+    })
+
+    .catch(error => {
+        console.error(error);
+        res.render('pages/home', {items: [], error: true, message: 'Could not retrieve results', username: user.username});
+    });
+});
+
 // *****************************************************
 // <!-- Section 5 : Start Server-->
 // *****************************************************
