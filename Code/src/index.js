@@ -167,8 +167,7 @@ app.get('/search', (req, res) => {
 
     .then(results => {
         console.log(results.data);
-        res.json({message: 'Successfully retrieved data'});
-        res.render('pages/home', {items: results.data.data, error: false, username: user.username});
+        res.render({items: results.data.data, error: false, username: user.username, message: 'Successfully retrieved data'});
     })
 
     .catch(error => {
@@ -177,7 +176,104 @@ app.get('/search', (req, res) => {
     });
 });
 
-app.POST('/search-music', (req, res) => {
+// MUSALINK API endpoint for linking to other platforms
+app.get('/MUSALINK', async (req, res) => {
+
+    const musalink_query = `${req.query.musalink_query}`;
+  
+    let track_id = '';
+  
+    let track_name = '';
+  
+    let artist_name = '';
+  
+    let album_name = '';
+  
+    try {
+      // Getting links for songs on other platforms from Spotify track URL
+      if (musalink_query.includes('https://open.spotify.com/track/')) {
+  
+        track_id = musalink_query.split('/')[4];
+  
+        const spotify_query = await axios({
+          method: 'GET',
+          url: 'https://spotify81.p.rapidapi.com/tracks',
+          params: {ids: track_id},
+          headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'spotify81.p.rapidapi.com'
+          }
+        });
+  
+        console.log('hello birthday', spotify_query.data);
+        
+        track_name = spotify_query.data.tracks[0].name;
+  
+        artist_name = spotify_query.data.tracks[0].artists[0].name;
+  
+        album_name = spotify_query.data.tracks[0].album.name;
+  
+        const apple_music_query = await axios({
+          method: 'GET',
+          url: 'https://duckduckgo8.p.rapidapi.com/',
+          params: {q: 'apple music ' + track_name + ' ' + artist_name},
+          headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'duckduckgo8.p.rapidapi.com'
+          }
+        });
+  
+        console.log('bro what', apple_music_query.data);
+  
+        let apple_music_url = apple_music_query.data.results[0].url;
+  
+        const youtube_query = await axios({
+          method: 'GET',
+          url: 'https://duckduckgo8.p.rapidapi.com/',
+          params: {q: 'youtube ' + track_name + ' ' + artist_name},
+          headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'duckduckgo8.p.rapidapi.com'
+          }
+        });
+  
+        console.log('no way', youtube_query.data);
+        
+        let youtube_url = youtube_query.data.results[0].url;
+  
+        res.render('pages/home', {
+          track_name: track_name,
+          artist_name: artist_name, 
+          apple_music_link: apple_music_url, 
+          youtube_link: youtube_url,
+          spotify_link: undefined,
+          album_name: album_name,
+          error_1: false,
+          username: user.username
+        });
+  
+      }
+  
+    }
+  
+    catch(error) {
+      console.error(error);
+      res.render({
+        track_name: undefined,
+        artist_name: undefined,
+        apple_music_link: undefined,
+        youtube_link: undefined,
+        spotify_link: undefined,
+        album_name: undefined,
+        username: user.username, 
+        error_1: true, 
+        message_1: 'Could not retrieve links. Please enter a valid URL.'
+    });
+    }
+
+  });  
+
+app.post('/search-music', (req, res) => {
 
     const search_query = `${req.query.search_query}`;
 
