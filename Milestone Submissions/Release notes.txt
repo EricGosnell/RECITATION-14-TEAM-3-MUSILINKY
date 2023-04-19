@@ -1,0 +1,14 @@
+Release Notes
+
+Week of 4/17/23
+
+v1.0
+
+Added Skeleton of code
+Plan created for further implementations
+
+v1.1
+
+Further implementation done on Home page, front end HTML design.
+Further implementation done on Index.js, back end API calls.
+Test cases in progress.
