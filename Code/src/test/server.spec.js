@@ -25,7 +25,28 @@ describe('Server!', () => {
 
   // ===========================================================================
   // TO-DO: Part A Login unit test case
+    it('positive : /register', done => {
+        chai
+            .request(server)
+            .post('/register')
+            .send({username: 'name', password: 'pass'})
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.message).to.equals('Successfully registered');
+                done();
+            });
 
+    it('Negative : /login', done => {
+        chai
+            .request(server)
+            .get('/login')
+            .send({username: 'invalid_user', password:'invalid_password'})
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.message).to.equals('Invalid username or password');
+                done();
+            });
+    });
 });
 
 describe('Login', () => {
