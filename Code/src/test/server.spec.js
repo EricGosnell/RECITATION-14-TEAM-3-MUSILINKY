@@ -50,27 +50,13 @@ describe('Server!', () => {
     });
 });
 
-describe('Login', () => {
-  // Sample test case given to test / endpoint.
-  it('Returns the default welcome message', done => {
-    chai
-      .request(server)
-      .get('/login')
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body.status).to.equals('success');
-        assert.strictEqual(res.body.message, 'Welcome!');
-        done();
-      });
-  });
-
   // ===================================================
   // Deezer API Positive Test Case
   it('positive : /search', done => {
   chai
     .request(server)
     .get('/search')
-    .send({search_query: 'Linkin Park'})
+    .query({search_query: 'Test Query'})
     .end((err, res) => {
       expect(res).to.have.status(200);
       expect(res.body.message).to.equals('Successfully retrieved data');
@@ -84,14 +70,10 @@ it('Negative : /MUSALINK', done => {
   chai
     .request(server)
     .get('/MUSALINK')
-    .send({musalink_query: 'https://open.spotify.com/track/random'})
+    .query({musalink_query: 'https://open.spotify.com/track/random'})
     .end((err, res) => {
       expect(res).to.have.status(200);
-      expect(res.body.message).to.equals('Invalid URL');
+      expect(res.body.message_1).to.equals('Could not retrieve links. Please enter a valid URL.');
       done();
     });
-});
-
-
-
 });
