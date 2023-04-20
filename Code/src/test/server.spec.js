@@ -35,6 +35,7 @@ describe('Server!', () => {
                 expect(res.body.message).to.equals('Successfully registered');
                 done();
             });
+    });
 
     it('Negative : /login', done => {
         chai
