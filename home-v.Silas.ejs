@@ -1,0 +1,107 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+
+<main>
+  <div class="container">
+    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+    
+    <h1><centre>Welcome to Musalink!</centre></h1>
+
+    <form action="/search" method="get" class="row mb-3">
+      <div class="col-sm-5">
+        <input name="search_query" type="text" class="form-control" placeholder="Search Albums, Genres, Artists, or Tracks">
+      </div>
+    
+      <div class="col-sm-5">
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </form>
+
+    <%- include ('../partials/message') %>
+
+    <% if (locals.error == false) { const MAX_ITEMS = items.length; %>
+
+      <table class="table">
+        <th scope="row"></th>
+        <th scope="col">Title</th>
+        <th scope="col">Artist</th>
+        <th scope="col">Album</th>
+        <th scope="col">Preview</th>
+        <th scope="col">Link</th>
+      <% for (let i = 0; i < items.length; i++) { %>
+        <tr>
+          <th><%- i + 1 %></th>
+          <td><%- items[i].title %></td>
+          <td><%- items[i].artist.name %></td>
+          <td><%- items[i].album.title %></td>
+          <td><audio controls><source src="<%- items[i].preview %>"></audio></td>
+          <td><a href="<%- items[i].link %>" target="_blank">Song Link</a></td>
+        </tr>
+        <% } %>
+      </table>
+    <% } %>
+  </div>
+
+  <form action="/MUSALINK" method="get" class="row mb-3">
+    <div class="col-sm-5">
+      <input name="musalink_query" type="text" class="form-control" 
+      placeholder="Enter a track or album link on Spotify, Youtube, Amazon Music, or Apple Music">
+    </div>
+  
+    <div class="col-sm-5">
+      <button type="submit" class="btn btn-primary">MUSALINK</button>
+    </div>
+  </form>
+
+  <% if (locals.message_1) { %>
+    <div
+      class="alert alert-<%- locals.error_1 ? 'danger' : 'success' %>"
+      role="alert">
+      <%= message_1 %>
+    </div>
+    <% } %>
+
+  <% if (locals.error_1 == false) { %>
+  <table class="table">
+    <th>Track</th>
+    <th>Album</th>
+    <th>Artist</th>
+    <th>Platform</th>
+    <th>Link</th>
+
+    <% if (spotify_link !== undefined) { %>
+    <tr>
+      <td><%- track_name %></td>
+      <td><%- album_name %></td>
+      <td><%- artist_name %></td>
+      <td>Spotify</td>
+      <td><a href="<%- spotify_link %>" target="_blank">Link</a></td>
+    </tr>
+    <% } %>
+
+    <% if (youtube_link !== undefined) { %>
+      <tr>
+        <td><%- track_name %></td>
+        <td><%- album_name %></td>
+        <td><%- artist_name %></td>
+        <td>Youtube</td>
+        <td><a href="<%- youtube_link %>" target="_blank">Link</a></td>
+      </tr>
+      <% } %>
+
+      <% if (apple_music_link !== undefined) { %>
+        <tr>
+          <td><%- track_name %></td>
+          <td><%- album_name %></td>
+          <td><%- artist_name %></td>
+          <td>Apple Music</td>
+          <td><a href="<%- apple_music_link %>" target="_blank">Link</a></td>
+        </tr>
+        <% } %>
+
+  </table>
+  <% } %>
+
+</main>
+
+<%- include ('../partials/footer') %>
