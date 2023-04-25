@@ -298,7 +298,7 @@ app.get('/find', (req,res) => {
 app.get('/logout', (req,res) => {
     req.session.destroy();
     res.locals.message = 'Logged out.';
-    res.render('pages/login');
+    res.render('pages/logout');
 });
 
 app.post('/search-music', (req, res) => {
