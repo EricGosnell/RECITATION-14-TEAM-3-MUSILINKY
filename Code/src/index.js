@@ -291,6 +291,10 @@ app.get('/home', (req,res) => {
     res.render("pages/home");
 });
 
+app.get('/find', (req,res) => {
+    res.render("pages/find");
+});
+
 app.get('/logout', (req,res) => {
     req.session.destroy();
     res.locals.message = 'Logged out.';
