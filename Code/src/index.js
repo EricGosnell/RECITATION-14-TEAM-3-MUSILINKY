@@ -235,7 +235,7 @@ app.get('/MUSALINK', async (req, res) => {
   
         let soundcloud_url = soundcloud_query.data.results[0].url;  
   
-        return await res.render('pages/find', {
+        res.render('pages/find', {
           track_name: track_name,
           artist_name: artist_name, 
           apple_music_link: apple_music_url, // apple music
