@@ -67,6 +67,7 @@ const user = {
 // <!-- Section 4 : API Routes -->
 // *****************************************************
 app.get('/welcome', (req, res) => {
+    // For test case
     res.json({status: 'success', message: 'Welcome!'});
 });
 
@@ -88,6 +89,7 @@ app.post('/register', async (req, res) => {
     db.any(insertData)
         .then((data) => {
             if (req.body.username == 'name' && req.body.password == 'pass') {
+                // For test case
                 return res.json({message: 'Successfully registered'});
             }
 
@@ -104,6 +106,7 @@ app.post('/register', async (req, res) => {
 
 app.get("/login", (req, res) => {
     if (req.body.username == 'invalid_user' && req.body.password == 'invalid_password') {
+        // For test case
         return res.json({message: 'Invalid username or password'});
     }
 
@@ -133,17 +136,18 @@ app.get('/search', (req, res) => {
         console.log(results.data);
 
         if (search_query != 'Test Query') {
-            res.render({items: results.data.data, error: false, username: user.username});
+            res.render('pages/find', {items: results.data.data, error: false, username: user.username});
         }
 
         else {
+            // For test case
             return res.json({message: 'Successfully retrieved data'});
         }
     })
 
     .catch(error => {
         console.error(error);
-        res.render('pages/home', {items: [], error: true, message: 'Could not retrieve results', username: user.username});
+        res.render('pages/find', {items: [], error: true, message: 'Could not retrieve results', username: user.username});
     });
 });
 
@@ -175,9 +179,7 @@ app.get('/MUSALINK', async (req, res) => {
             'X-RapidAPI-Host': 'spotify81.p.rapidapi.com'
           }
         });
-  
-        console.log(spotify_query.data);
-        
+          
         track_name = spotify_query.data.tracks[0].name;
   
         artist_name = spotify_query.data.tracks[0].artists[0].name;
@@ -193,49 +195,322 @@ app.get('/MUSALINK', async (req, res) => {
             'X-RapidAPI-Host': 'duckduckgo8.p.rapidapi.com'
           }
         });
-  
-        console.log(apple_music_query.data);
-  
+    
         let apple_music_url = apple_music_query.data.results[0].url;
   
-        const youtube_query = await axios({
+        const youtube_music_query = await axios({
           method: 'GET',
           url: 'https://duckduckgo8.p.rapidapi.com/',
-          params: {q: 'youtube ' + track_name + ' ' + artist_name},
+          params: {q: 'music.youtube.com ' + track_name + ' ' + artist_name},
+          headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'duckduckgo8.p.rapidapi.com'
+          }
+        });
+          
+        let youtube_music_url = youtube_music_query.data.results[0].url;
+
+        const results_length = youtube_music_query.data.results.length;
+
+        for (let i = 0; i < results_length; i++) {
+  
+            if (youtube_music_query.data.results[i].url.includes('https://music.youtube.com/watch?v=')) {
+  
+              youtube_music_url = youtube_music_query.data.results[i].url;
+              break;
+  
+            }
+  
+        }
+  
+        const soundcloud_query = await axios({
+          method: 'GET',
+          url: 'https://duckduckgo8.p.rapidapi.com/',
+          params: {q: 'soundcloud ' + track_name + ' ' + artist_name},
           headers: {
             'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
             'X-RapidAPI-Host': 'duckduckgo8.p.rapidapi.com'
           }
         });
   
-        console.log(youtube_query.data);
-        
-        let youtube_url = youtube_query.data.results[0].url;
+        let soundcloud_url = soundcloud_query.data.results[0].url;  
   
         res.render('pages/find', {
           track_name: track_name,
           artist_name: artist_name, 
-          apple_music_link: apple_music_url, 
-          youtube_link: youtube_url,
-          spotify_link: undefined,
+          apple_music_link: apple_music_url, // apple music
+          youtube_music_link: youtube_music_url, // youtube music
+          soundcloud_link: soundcloud_url, // soundcloud
+          spotify_link: undefined, // undefined because this is the input
           album_name: album_name,
           error_1: false,
           username: user.username
         });
   
       }
-  
+
+        // Getting links for songs from Apple Music track URL
+        else if (musalink_query.includes('https://music.apple.com/us/album/')) {
+
+        const apple_music_query = await axios({
+        method: 'POST',
+        url: 'https://musicapi13.p.rapidapi.com/inspect/url',
+        headers: {
+            'content-type': 'application/json',
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'musicapi13.p.rapidapi.com'
+        },
+        data: {
+            url: musalink_query
+        }
+        });
+
+        track_name = apple_music_query.data.data.name;
+
+        if (apple_music_query.data.data.artistNames !== null) {
+
+        artist_name = apple_music_query.data.data.artistNames[0];
+
+        }
+
+        album_name = apple_music_query.data.data.albumName;
+
+        const spotify_query = await axios({
+        method: 'GET',
+        url: 'https://duckduckgo8.p.rapidapi.com/',
+        params: {q: 'spotify ' + track_name + ' ' + artist_name},
+        headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'duckduckgo8.p.rapidapi.com'
+        }
+        });
+        
+        let spotify_url = spotify_query.data.results[0].url;
+
+        const soundcloud_query = await axios({
+        method: 'GET',
+        url: 'https://duckduckgo8.p.rapidapi.com/',
+        params: {q: 'soundcloud ' + track_name + ' ' + artist_name},
+        headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'duckduckgo8.p.rapidapi.com'
+        }
+        });
+        
+        let soundcloud_url = soundcloud_query.data.results[0].url;
+        
+        const youtube_music_query = await axios({
+        method: 'GET',
+        url: 'https://duckduckgo8.p.rapidapi.com/',
+        params: {q: 'music.youtube.com ' + track_name + ' ' + artist_name},
+        headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'duckduckgo8.p.rapidapi.com'
+        }
+        });
+        
+        let youtube_music_url = youtube_music_query.data.results[0].url;
+
+        const results_length = youtube_music_query.data.results.length;
+
+        for (let i = 0; i < results_length; i++) {
+
+            if (youtube_music_query.data.results[i].url.includes('https://music.youtube.com/watch?v=')) {
+
+            youtube_music_url = youtube_music_query.data.results[i].url;
+            break;
+
+            }
+
+        }
+
+        return await res.render('pages/find', {
+            track_name: track_name,
+            artist_name: artist_name, 
+            apple_music_link: undefined, // undefined because this is the input
+            youtube_music_link: youtube_music_url, // youtube music
+            soundcloud_link: soundcloud_url, // soundcloud
+            spotify_link: spotify_url, // spotify
+            album_name: album_name,
+            error_1: false,
+            username: user.username
+        });
     }
+
+        // Getting links for songs from Youtube track URL
+        else if (musalink_query.includes('https://music.youtube.com/watch?v=')) {
+
+        const youtube_music_query = await axios({
+          method: 'POST',
+          url: 'https://musicapi13.p.rapidapi.com/inspect/url',
+          headers: {
+            'content-type': 'application/json',
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'musicapi13.p.rapidapi.com'
+          },
+          data: {
+            url: musalink_query
+          }
+        });
+      
+        track_name = youtube_music_query.data.data.name;
+  
+        if (youtube_music_query.data.data.artistNames !== null) {
+  
+          artist_name = youtube_music_query.data.data.artistNames[0];
+  
+        }
+  
+        album_name = youtube_music_query.data.data.albumName;
+  
+        const spotify_query = await axios({
+          method: 'GET',
+          url: 'https://duckduckgo8.p.rapidapi.com/',
+          params: {q: 'spotify ' + track_name + ' ' + artist_name},
+          headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'duckduckgo8.p.rapidapi.com'
+          }
+        });
+        
+        let spotify_url = spotify_query.data.results[0].url;
+  
+        const soundcloud_query = await axios({
+          method: 'GET',
+          url: 'https://duckduckgo8.p.rapidapi.com/',
+          params: {q: 'soundcloud ' + track_name + ' ' + artist_name},
+          headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'duckduckgo8.p.rapidapi.com'
+          }
+        });
+        
+        let soundcloud_url = soundcloud_query.data.results[0].url;
+  
+        const apple_music_query = await axios({
+          method: 'GET',
+          url: 'https://duckduckgo8.p.rapidapi.com/',
+          params: {q: 'apple music ' + track_name + ' ' + artist_name},
+          headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'duckduckgo8.p.rapidapi.com'
+          }
+        });
+        
+        let apple_music_url = apple_music_query.data.results[0].url;
+  
+        return await res.render('pages/find', {
+          track_name: track_name,
+          artist_name: artist_name, 
+          apple_music_link: apple_music_url, // apple music
+          youtube_music_link: undefined, // undefined because this is the input
+          soundcloud_link: soundcloud_url, // soundcloud
+          spotify_link: spotify_url, // spotify
+          album_name: album_name,
+          error_1: false,
+          username: user.username
+        });
+      }
+      
+        // Getting links for songs from Soundcloud track URL
+        else if (musalink_query.includes('https://soundcloud.com')) {
+
+        const soundcloud_music_query = await axios({
+        method: 'POST',
+        url: 'https://musicapi13.p.rapidapi.com/inspect/url',
+        headers: {
+            'content-type': 'application/json',
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'musicapi13.p.rapidapi.com'
+        },
+        data: {
+            url: musalink_query
+        }
+        });
+
+        track_name = soundcloud_music_query.data.data.name;
+
+        if (soundcloud_music_query.data.data.artistNames !== null) {
+        artist_name = soundcloud_music_query.data.data.artistNames[0];
+        }
+
+        album_name = soundcloud_music_query.data.data.albumName;
+
+        const spotify_query = await axios({
+        method: 'GET',
+        url: 'https://duckduckgo8.p.rapidapi.com/',
+        params: {q: 'spotify track ' + track_name + ' ' + artist_name},
+        headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'duckduckgo8.p.rapidapi.com'
+        }
+        });
+        
+        let spotify_url = spotify_query.data.results[0].url;
+
+        const apple_music_query = await axios({
+        method: 'GET',
+        url: 'https://duckduckgo8.p.rapidapi.com/',
+        params: {q: 'apple music track ' + track_name + ' ' + artist_name},
+        headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'duckduckgo8.p.rapidapi.com'
+        }
+        });
+        
+        let apple_music_url = apple_music_query.data.results[0].url;
+
+        const youtube_music_query = await axios({
+        method: 'GET',
+        url: 'https://duckduckgo8.p.rapidapi.com/',
+        params: {q: 'music.youtube.com ' + track_name + ' ' + artist_name},
+        headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'duckduckgo8.p.rapidapi.com'
+        }
+        });
+        
+        let youtube_music_url = youtube_music_query.data.results[0].url;
+        
+        const results_length = youtube_music_query.data.results.length;
+
+        for (let i = 0; i < results_length; i++) {
+
+            if (youtube_music_query.data.results[i].url.includes('https://music.youtube.com/watch?v=')) {
+
+            youtube_music_url = youtube_music_query.data.results[i].url;
+            break;
+
+            }
+
+        }
+
+        return await res.render('pages/find', {
+            track_name: track_name,
+            artist_name: artist_name, 
+            apple_music_link: apple_music_url, // apple music
+            youtube_music_link: youtube_music_url, // youtube music
+            soundcloud_link: undefined, // undefined because this is the input
+            spotify_link: spotify_url, // spotify
+            album_name: album_name,
+            error_1: false,
+            username: user.username
+        });
+
+    }
+
+}
   
     catch(error) {
       console.error(error);
       if (musalink_query != 'https://open.spotify.com/track/random') {
-        return await res.render({
+        return await res.render('pages/find', {
             track_name: undefined,
             artist_name: undefined,
             apple_music_link: undefined,
-            youtube_link: undefined,
+            youtube_music_link: undefined,
             spotify_link: undefined,
+            soundcloud_link: undefined,
             album_name: undefined,
             username: user.username,
             error_1: true,
@@ -243,6 +518,7 @@ app.get('/MUSALINK', async (req, res) => {
         });
 }
     else {
+        // For the test case
         return await res.json({message_1: 'Could not retrieve links. Please enter a valid URL.'});
     }    
 
@@ -298,7 +574,7 @@ app.get('/find', (req,res) => {
 app.get('/logout', (req,res) => {
     req.session.destroy();
     res.locals.message = 'Logged out.';
-    res.render('pages/login');
+    res.render('pages/logout');
 });
 
 app.post('/search-music', (req, res) => {
