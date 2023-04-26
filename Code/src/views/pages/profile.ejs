@@ -21,16 +21,13 @@
   </div>
 
   <h1>Friends</h1>
-  <% friends.forEach(function(friend) { %>
-    <a href="/profile"><%= friend.username %></a>
-    <!--    TODO: link to friends profile page -->
-  <% }); %>
   <!--        TODO: Remove friend button -->
   <div>
-    <form action="/addFriend" method="post" class="row mb-3">
+    <h2>Add Friend: </h2>
+    <form action="/addFriend" method="post" class="row">
       <div class="col-sm-5">
         <label>
-          <input name="username" type="text" class="form-control" placeholder="Enter the username of the person you wish to add">
+          <input name="username" type="text" class="form-control" placeholder="Enter username">
         </label>
       </div>
 
