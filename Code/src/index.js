@@ -646,6 +646,94 @@ app.post('/search-music', (req, res) => {
     });
 });
 
+app.get('/playlist', (req, res) => {
+    const added = req.query.added;
+    // Query to list all the songs added in the playlist
+  
+    db.any(added ? user_song : all_, [req.session.user.song_id])
+      .then((playlist) => {
+        res.render("pages/playlist", {
+          playlist,
+          action: req.query.taken ? "delete" : "add",
+        })
+      })
+      .catch((err) => {
+        res.render("pages/playlist", {
+          playlist: [],
+          error: true,
+          message: err.message,
+        });
+      });
+  });
+  
+  app.post('/playlist/add', (req, res) => {
+    const course_id = parseInt (req.body.course_id);
+    db.tx(async (t) => {
+      // This transaction will continue iff the student has satisfied all the
+      // required prerequisites.
+    //   const { num_prerequisites } = await t.one(
+    //     `SELECT
+    //       num_prerequisites
+    //      FROM
+    //       course_prerequisite_count
+    //      WHERE
+    //       course_id = $1`,
+    //     [course_id]
+    //   );
+        await t.none(
+            "INSERT INTO user_song(user_id, song_id) VALUES ($1, $2);",
+            [song_id, req.session.user.user_id]
+        );
+        return t.any(all_song, [req.session.user.user_id]);
+    })
+      .then((playlist) => {
+        console.info(playlist);
+        res.render("pages/playlist", {
+          playlist,
+          message: `Successfully added song ${req.body.song_id}`,
+        });
+      })
+      .catch((err) => {
+        res.render("pages/playlist", {
+          playlist: [],
+          error: true,
+          message: err.message,
+        });
+      });
+});
+
+
+app.post("/playlist/delete", (req, res) => {
+    db.task("delete-song", (task) => {
+      return task.batch([
+        task.none(
+          `DELETE FROM
+              user_song
+            WHERE
+              user_id = $1
+              AND song_id = '$2';`,
+          [req.session.user.user_id, parseInt(req.body.song_id)]
+        ),
+        task.any(user_song, [req.session.user.user_id]),
+      ]);
+    })
+      .then(([, playlist]) => {
+        console.info(playlist);
+        res.render("pages/playlist", {
+          playlist,
+          message: `Successfully removed song ${req.body.song_id}`,
+          action: "delete",
+        });
+      })
+      .catch((err) => {
+        res.render("pages/playlist", {
+          playlist: [],
+          error: true,
+          message: err.message,
+        });
+      });
+  });
+
 // *****************************************************
 // <!-- Section 5 : Start Server-->
 // *****************************************************
