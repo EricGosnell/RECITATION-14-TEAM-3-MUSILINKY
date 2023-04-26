@@ -20,8 +20,25 @@
     <p><strong>1/1/2023</strong></p>
   </div>
 
+  <h1>Friends</h1>
+  <% friends.forEach(function(friend) { %>
+    <a href="/profile"><%= friend.username %></a>
+    <!--    TODO: link to friends profile page -->
+  <% }); %>
+  <!--        TODO: Remove friend button -->
+  <div>
+    <form action="/addFriend" method="post" class="row mb-3">
+      <div class="col-sm-5">
+        <label>
+          <input name="username" type="text" class="form-control" placeholder="Enter the username of the person you wish to add">
+        </label>
+      </div>
+
+      <div class="col-sm-5">
+        <button type="submit" class="btn btn-primary">Add Friend</button>
+      </div>
+    </form>
+  </div>
 </main>
-
-
 
 <%- include ('../partials/footer') %>

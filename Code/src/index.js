@@ -409,6 +409,45 @@ app.get('/find', (req,res) => {
     res.render("pages/find");
 });
 
+app.get('/profile', (req,res) => {
+    const getFriends = "SELECT * from users WHERE user_id = SELECT user2_id from connections WHERE user1_id = ${req.session.user.user_id}"
+    res.render("pages/profile");
+    db.any(getFriends)
+        .then((friends) => {
+            res.render("pages/profile", {
+                friends,
+                action: `${req.query.username}`,
+            });
+        })
+        .catch((err) => {
+            res.render("pages/profile", {
+                friends: [],
+                error: true,
+                message: err.message,
+            });
+        });
+});
+
+app.post('/addFriend', (req,res) => {
+    const add =
+        'INSERT INTO connections (user1_id. user2_id) values ($1, $2), ($2, $1)  returning * ;';
+    db.any(add, [
+        req.session.user.user_id,
+        req.query.user2_id
+        //     TODO: username to user_id
+    ])
+        .then(function (data) {
+            res.status(201).json({
+                status: 'success',
+                data: data,
+                message: 'Friend added successfully',
+            });
+        })
+        .catch(function (err) {
+            return console.log(err);
+        });
+});
+
 app.get('/logout', (req,res) => {
     req.session.destroy();
     res.locals.message = 'Logged out.';
