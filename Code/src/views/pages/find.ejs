@@ -9,7 +9,7 @@
   
       <form action="/search" method="get" class="row mb-3">
         <div class="col-sm-5">
-          <input name="search_query" type="text" class="form-control" placeholder="Search Albums, Genres, Artists, or Tracks">
+          <input name="search_query" type="text" class="form-control" placeholder="Search Albums, Genres, Artists, or Tracks" required>
         </div>
       
         <div class="col-sm-5">
@@ -19,7 +19,7 @@
   
       <%- include ('../partials/message') %>
   
-      <% if (locals.error == false) { const MAX_ITEMS = items.length; %>
+      <% if (locals.error == false) { const MAX_ITEMS = items.length > 20 ? 20 : items.length; %>
   
         <table class="table">
           <th scope="row"></th>
@@ -28,7 +28,7 @@
           <th scope="col">Album</th>
           <th scope="col">Preview</th>
           <th scope="col">Link</th>
-        <% for (let i = 0; i < items.length; i++) { %>
+        <% for (let i = 0; i < MAX_ITEMS; i++) { %>
           <tr>
             <th><%- i + 1 %></th>
             <td><%- items[i].title %></td>
@@ -45,7 +45,13 @@
     <form action="/MUSALINK" method="get" class="row mb-3">
       <div class="col-sm-5">
         <input name="musalink_query" type="text" class="form-control" 
-        placeholder="Enter a track or album link on Spotify, Youtube, Amazon Music, or Apple Music">
+        placeholder="Enter a track link on Spotify, Youtube, Soundcloud, or Apple Music"
+        pattern="(https:\/\/music\.youtube\.com\/.+)|(https:\/\/music\.apple\.com\/.+)|(https:\/\/soundcloud.com\/.+)|(https:\/\/open\.spotify\.com\/track\/.+)"
+      title="Example URLs:
+      1. https://open.spotify.com/track/track_id
+      2. https://music.apple.com
+      3. https://music.youtube.com
+      4. https://soundcloud.com" required>
       </div>
     
       <div class="col-sm-5">
@@ -79,13 +85,13 @@
       </tr>
       <% } %>
   
-      <% if (youtube_link !== undefined) { %>
+      <% if (youtube_music_link !== undefined) { %>
         <tr>
           <td><%- track_name %></td>
           <td><%- album_name %></td>
           <td><%- artist_name %></td>
-          <td>Youtube</td>
-          <td><a href="<%- youtube_link %>" target="_blank">Link</a></td>
+          <td>Youtube Music</td>
+          <td><a href="<%- youtube_music_link %>" target="_blank">Link</a></td>
         </tr>
         <% } %>
   
@@ -96,6 +102,16 @@
             <td><%- artist_name %></td>
             <td>Apple Music</td>
             <td><a href="<%- apple_music_link %>" target="_blank">Link</a></td>
+          </tr>
+          <% } %>
+
+        <% if (soundcloud_link !== undefined) { %>
+          <tr>
+            <td><%- track_name %></td>
+            <td><%- album_name %></td>
+            <td><%- artist_name %></td>
+            <td>Soundcloud</td>
+            <td><a href="<%- soundcloud_link %>" target="_blank">Link</a></td>
           </tr>
           <% } %>
   
