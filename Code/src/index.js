@@ -301,6 +301,10 @@ app.get('/logout', (req,res) => {
     res.render('pages/logout');
 });
 
+app.get('/profile', (req,res) => {
+    res.render("pages/profile");
+})
+
 app.post('/search-music', (req, res) => {
 
     const search_query = `${req.query.search_query}`;
