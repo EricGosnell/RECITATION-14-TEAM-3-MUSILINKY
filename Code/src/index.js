@@ -212,7 +212,7 @@ app.get('/MUSALINK', async (req, res) => {
         
         let youtube_url = youtube_query.data.results[0].url;
   
-        res.render('pages/home', {
+        res.render('pages/find', {
           track_name: track_name,
           artist_name: artist_name, 
           apple_music_link: apple_music_url, 
