@@ -19,4 +19,19 @@ Minutes of the Meeting - 4/12/23
 
   Make a project board with epics and user stories for future meetings. Tie into GitHub repository.
   Add release notes for future meetings.
-  Release notes can be automated or manual.
+  Release notes can be automated or manual. 
+
+Minutes of the Meeting -4/19/23
+
+1. One working application
+
+  For next week, one working merged application is needed rather then showing bits and pieces of code for different people. 
+
+2. Project Board 
+
+  For next week, modifications are needed to the project board. Structural changes such as adding user acceptance criteria, 
+  story points, assignees, and adjusting epic names to better create Agile flow is needed.
+
+3. Commit table
+
+  A commit table is needed to track commits and current activity. Communication and work good overall.
