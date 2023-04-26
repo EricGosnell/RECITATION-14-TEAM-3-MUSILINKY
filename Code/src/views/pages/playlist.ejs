@@ -1,2 +1,64 @@
 <%- include ('../partials/header') %>
 <%- include ('../partials/menu') %>
+<div class="col"><%- include ('../partials/message') %></div>
+
+
+<main>
+    <div class="container">
+    <% if (locals.message) { %>
+        <div
+          class="alert alert-<%- locals.error ? 'danger' : 'success' %>"
+          role="alert"
+        >
+          <%= message %>
+        </div>
+        <% } %>
+
+        <table>
+            <tr>
+              <th>Song ID</th>
+              <th>Song Name</th>
+              <th>Song Artist</th>
+              <th>Song Length</th>
+            </tr>
+            <tbody>
+                <% playlist.forEach(function(song){  %>
+                    <tr>
+                        <td>
+                            <%= song.song_id %>
+                        </td>
+                        <td>
+                            <%= song.song_name %>
+                        </td>
+                        <td>
+                            <%= song.song_artist %>
+                        </td>
+                        <td>
+                            <%= song.song_length %>
+                        </td>
+                        <td>
+                            <% if (locals.action == 'delete') { %>
+                                    <form action="/courses/delete" method="POST">
+                                        <input type="hidden" name="song_id" class="nav-link" value = "<%- song.song_id %>"/>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">DELETE</button>
+                                    </form>
+                            <% } else { %>
+                                <% if (!song.taken) { %>
+                                    <form action="/courses/" method="POST">
+                                        <input type="hidden" name="song_id" class="nav-link" value = "<%- song.song_id %>"/>
+                                        <button type="submit" class="btn btn-sm btn-outline-success">ADD</button>
+                                    </form>
+                                <% } else { %>
+                                    <form action="/courses/add" method="POST">
+                                        <input type="hidden" name="song_id" class="nav-link" value = "<%- song.song_id %>"/>
+                                        <button type="submit" class="btn btn-sm btn-outline-success" disabled>ADD</button>
+                                    </form>
+                                <%}%> 
+                            <%}%>
+                        </td>
+                <% }) %> 
+                </tr>
+            </tbody>
+          </table>
+    </div>
+</main>
