@@ -6,7 +6,8 @@ DROP TABLE IF EXISTS users_to_playlists CASCADE;
 CREATE TABLE IF NOT EXISTS users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
-    password CHAR(60) NOT NULL
+    password CHAR(60) NOT NULL,
+    bio VARCHAR (250)
 );
 
 CREATE TABLE IF NOT EXISTS connections (
