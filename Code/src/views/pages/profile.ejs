@@ -36,6 +36,24 @@
       </div>
     </form>
   </div>
+
+  <h1>Friends</h1>
+  <!--        TODO: Remove friend button -->
+  <div>
+    <h2>Add Friend: </h2>
+    <form action="/addFriend" method="post" class="row">
+      <div class="col-sm-5">
+        <label>
+          <input name="username" type="text" class="form-control" placeholder="Enter username">
+        </label>
+      </div>
+
+      <div class="col-sm-5">
+        <button type="submit" class="btn btn-primary">Add Friend</button>
+      </div>
+    </form>
+  </div>
+
 </main>
 
 <%- include ('../partials/footer') %>
