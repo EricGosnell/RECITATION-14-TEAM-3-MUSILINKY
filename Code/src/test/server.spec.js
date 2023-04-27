@@ -52,17 +52,17 @@ describe('Server!', () => {
 
 //   // ===================================================
 //   // Deezer API Positive Test Case
-//   it('positive : /search', done => {
-//   chai
-//     .request(server)
-//     .get('/search')
-//     .query({search_query: 'Test Query'})
-//     .end((err, res) => {
-//       expect(res).to.have.status(200);
-//       expect(res.body.message).to.equals('Successfully retrieved data');
-//       done();
-//     });
-// });
+  it('positive : /search', done => {
+  chai
+    .request(server)
+    .get('/search')
+    .query({search_query: 'Test Query'})
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      expect(res.body.message).to.equals('Successfully retrieved data');
+      done();
+    });
+});
 
 // ========================================================
 // MUSALINK API Negative Test Case 
