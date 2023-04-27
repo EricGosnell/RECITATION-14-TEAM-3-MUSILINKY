@@ -578,11 +578,11 @@ app.get('/initialize_playlist', (req, res) => {
     db.any('SELECT * FROM songs WHERE in_playlist = true')
   
     .then(playlist => {
-      res.render('pages/playlists', {playlist, action: 'delete'});
+      res.render('pages/playlist', {playlist, action: 'delete'});
     })
   
     .catch(err => {
-      res.render('pages/playlists', {
+      res.render('pages/playlist', {
         playlist: [],
         error: true,
         message: err.message
@@ -593,32 +593,44 @@ app.get('/initialize_playlist', (req, res) => {
   app.get('/playlist', (req, res) => {
     // Query to list all the songs added in the playlist
   
-    const artist_name = `${req.query.artist_name}`;
+    const artist_name = `${req.query.search_artist_name}`;
   
-    const song_title = `${req.query.song_title}`;
+    const song_title = `${req.query.search_song_title}`;
+
+    const song_album = `${req.query.search_album_name}`;
+
+    const song_preview = `${req.query.search_song_preview}`;
+
+    const song_link = `${req.query.search_song_link}`;
   
-    insert_query = `INSERT INTO songs (song_name, song_artist, in_playlist) VALUES ($1, $2, $3) RETURNING *;`;
+    const insert_query = `INSERT INTO search_songs 
+    (song_name, song_artist, song_album, song_preview, song_link, in_playlist) 
+    VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`;
   
-    songs_in_playlist = 'SELECT * FROM songs WHERE in_playlist = true;';
+    const songs_in_playlist = `SELECT 
+    song_name, song_artist, song_album, song_preview, song_link 
+    FROM search_songs WHERE in_playlist = true;`;
   
-    db.any(insert_query, [song_title, artist_name, true])
-      .catch((err) => {
-        res.render("pages/playlists", {
-          playlist: [],
-          error: true,
-          message: err.message
+    if (song_title != null) {
+        db.any(insert_query, [song_title, artist_name, song_album, song_preview, song_link, true])
+        .catch((err) => {
+            res.render("pages/playlist", {
+            playlist: [],
+            error: true,
+            message: err.message
+            });
         });
-      });
+    }
   
       db.any(songs_in_playlist)
-      .then(playlist => {
-        res.render('pages/playlists', {
+      .then((playlist) => {
+        res.render('pages/playlist', {
           playlist,
           action: 'delete'
         });
       })
       .catch((err) => {
-        res.render("pages/playlists", {
+        res.render("pages/playlist", {
           playlist: [],
           error: true,
           message: err.message

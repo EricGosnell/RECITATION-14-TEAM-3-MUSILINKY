@@ -27,20 +27,17 @@ CREATE TABLE IF NOT EXISTS users_to_playlists (
     FOREIGN KEY (playlist_id) REFERENCES playlists (playlist_id)
 );
 
-DROP TABLE IF EXISTS songs CASCADE;
+DROP TABLE IF EXISTS search_songs CASCADE;
 
-CREATE TABLE IF NOT EXISTS songs(
-    song_id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS search_songs(
+    song_id SERIAL PRIMARY KEY NOT NULL,
     song_name VARCHAR(100) NOT NULL,
-    song_artist VARCHAR(100) NOT NULL,
+    song_artist VARCHAR(100),
+    song_album VARCHAR(100),
+    song_preview TEXT,
+    song_link TEXT,
     in_playlist BOOLEAN NOT NULL
 );
-
-INSERT INTO songs (song_name, song_artist, in_playlist) VALUES
-('Bad Liar', 'Imagine Dragons', false),
-('Salt', 'Ava Max', false),
-('Flowers', 'Miley Cyrus', false),
-('Party Monster', 'The Weeknd', false);
 
 DROP TABLE IF EXISTS user_song;
 CREATE TABLE user_song(

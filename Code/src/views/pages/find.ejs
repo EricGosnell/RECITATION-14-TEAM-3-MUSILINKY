@@ -28,7 +28,9 @@
           <th scope="col">Album</th>
           <th scope="col">Preview</th>
           <th scope="col">Link</th>
+          <th scope="col"></th>
         <% for (let i = 0; i < MAX_ITEMS; i++) { %>
+        <form action="/playlist" method="get">
           <tr>
             <th><%- i + 1 %></th>
             <td><%- items[i].title %></td>
@@ -36,7 +38,14 @@
             <td><%- items[i].album.title %></td>
             <td><audio controls><source src="<%- items[i].preview %>"></audio></td>
             <td><a href="<%- items[i].link %>" target="_blank">Song Link</a></td>
+            <td><button type="submit" class="btn btn-outline-success">ADD</button></td>
           </tr>
+          <input type="hidden" name="search_song_title" value="<%- items[i].title %>">
+          <input type="hidden" name="search_artist_name" value="<%- items[i].artist.name %>">
+          <input type="hidden" name="search_album_name" value="<%- items[i].album.title %>">
+          <input type="hidden" name="search_song_preview" value="<%- items[i].preview %>">
+          <input type="hidden" name="search_song_link" value="<%- items[i].link %>">
+        </form>
           <% } %>
         </table>
       <% } %>
