@@ -10,6 +10,7 @@ const session = require('express-session'); // To set the session object. To sto
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios');
 const {response} = require("express"); // To make HTTP requests from our server. We'll learn more about it in Part B.
+const path = require('path');
 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
@@ -57,6 +58,8 @@ app.use(
         extended: true,
     })
 );
+
+app.use(express.static(path.join(__dirname, "resources")));
 
 const user = {
     username: undefined,
@@ -571,6 +574,58 @@ app.get('/find', (req,res) => {
     res.render("pages/find");
 });
 
+app.get('/initialize_playlist', (req, res) => {
+    db.any('SELECT * FROM songs WHERE in_playlist = true')
+  
+    .then(playlist => {
+      res.render('pages/playlists', {playlist, action: 'delete'});
+    })
+  
+    .catch(err => {
+      res.render('pages/playlists', {
+        playlist: [],
+        error: true,
+        message: err.message
+      });
+    });
+  });
+
+  app.get('/playlist', (req, res) => {
+    // Query to list all the songs added in the playlist
+  
+    const artist_name = `${req.query.artist_name}`;
+  
+    const song_title = `${req.query.song_title}`;
+  
+    insert_query = `INSERT INTO songs (song_name, song_artist, in_playlist) VALUES ($1, $2, $3) RETURNING *;`;
+  
+    songs_in_playlist = 'SELECT * FROM songs WHERE in_playlist = true;';
+  
+    db.any(insert_query, [song_title, artist_name, true])
+      .catch((err) => {
+        res.render("pages/playlists", {
+          playlist: [],
+          error: true,
+          message: err.message
+        });
+      });
+  
+      db.any(songs_in_playlist)
+      .then(playlist => {
+        res.render('pages/playlists', {
+          playlist,
+          action: 'delete'
+        });
+      })
+      .catch((err) => {
+        res.render("pages/playlists", {
+          playlist: [],
+          error: true,
+          message: err.message
+        });
+      });  
+  });  
+
 app.get('/profile', (req,res) => {
     const getFriends = "SELECT * from users WHERE user_id = SELECT user2_id from connections WHERE user1_id = ${req.session.user.user_id}"
     res.render("pages/profile");
@@ -613,7 +668,7 @@ app.post('/addFriend', (req,res) => {
 app.get('/logout', (req,res) => {
     req.session.destroy();
     res.locals.message = 'Logged out.';
-    res.render('pages/logout');
+    res.render('pages/login');
 });
 
 app.post('/search-music', (req, res) => {

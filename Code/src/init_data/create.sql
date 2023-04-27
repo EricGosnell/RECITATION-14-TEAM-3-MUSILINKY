@@ -28,18 +28,19 @@ CREATE TABLE IF NOT EXISTS users_to_playlists (
 );
 
 DROP TABLE IF EXISTS songs CASCADE;
-CREATE TABLE songs(
-    song_id NUMERIC PRIMARY KEY,
+
+CREATE TABLE IF NOT EXISTS songs(
+    song_id SERIAL PRIMARY KEY,
     song_name VARCHAR(100) NOT NULL,
     song_artist VARCHAR(100) NOT NULL,
-    song_length NUMERIC NOT NULL
+    in_playlist BOOLEAN NOT NULL
 );
 
-INSERT INTO songs (song_id, song_name, song_artist, song_length) VALUES
-(01,'Bad Liar', 'Imagine Dragons', 4:00),
-(01,'Salt', 'Ava Max', 3:30),
-(03,'Flowers', 'Miley Cyrus', 3:00),
-(04,'Party Monster', 'The Weeknd', 4:30);
+INSERT INTO songs (song_name, song_artist, in_playlist) VALUES
+('Bad Liar', 'Imagine Dragons', false),
+('Salt', 'Ava Max', false),
+('Flowers', 'Miley Cyrus', false),
+('Party Monster', 'The Weeknd', false);
 
 DROP TABLE IF EXISTS user_song;
 CREATE TABLE user_song(
