@@ -575,7 +575,7 @@ app.get('/find', (req,res) => {
 });
 
 app.get('/initialize_playlist', (req, res) => {
-    db.any('SELECT * FROM songs WHERE in_playlist = true')
+    db.any('SELECT * FROM search_songs WHERE in_playlist = true')
   
     .then(playlist => {
       res.render('pages/playlist', {playlist, action: 'delete'});
@@ -736,17 +736,7 @@ app.get('/playlist', (req, res) => {
   app.post('/playlist/add', (req, res) => {
     const course_id = parseInt (req.body.course_id);
     db.tx(async (t) => {
-      // This transaction will continue iff the student has satisfied all the
-      // required prerequisites.
-    //   const { num_prerequisites } = await t.one(
-    //     `SELECT
-    //       num_prerequisites
-    //      FROM
-    //       course_prerequisite_count
-    //      WHERE
-    //       course_id = $1`,
-    //     [course_id]
-    //   );
+     
         await t.none(
             "INSERT INTO user_song(user_id, song_id) VALUES ($1, $2);",
             [song_id, req.session.user.user_id]

@@ -1,14 +1,14 @@
 <%- include ('../partials/header') %>
 <%- include ('../partials/menu') %>
 
-<main>
-    <div class="container find-container">
+<body style="margin-top: 100px;">
+    <div class="container" height="100%">
       <!-- THE REST OF YOUR HTML CODE GOES HERE -->
       
       <h1><centre>Welcome to Musalink!</centre></h1>
   
       <form action="/search" method="get" class="row mb-3">
-        <div class="col-sm-5">
+        <div class="col-sm-15">
           <input name="search_query" type="text" class="form-control" placeholder="Search Albums, Genres, Artists, or Tracks" required>
         </div>
       
@@ -127,6 +127,5 @@
     </table>
     <% } %>
   
-  </main>
-
+  </body>
   <%- include ('../partials/footer') %>
