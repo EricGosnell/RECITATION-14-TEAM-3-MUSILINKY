@@ -9,10 +9,10 @@
   
       <form action="/search" method="get" class="row mb-3">
         <div class="col-sm-15">
-          <input name="search_query" type="text" class="form-control" placeholder="Search Albums, Genres, Artists, or Tracks" required>
+          <input name="search_query" type="text" class="form-control" placeholder="Search albums, genres, artists, or tracks" required>
         </div>
       
-        <div class="col-sm-5">
+        <div class="col-sm-5 mt-2">
           <button type="submit" class="btn btn-primary">Search</button>
         </div>
       </form>
@@ -52,19 +52,19 @@
     </div>
   
     <form action="/MUSALINK" method="get" class="row mb-3">
-      <div class="col-sm-5">
+      <div class="col-sm-15" style="margin-left: 80px;">
         <input name="musalink_query" type="text" class="form-control" 
-        placeholder="Enter a track link on Spotify, Youtube, Soundcloud, or Apple Music"
+        placeholder="Enter a track link from Spotify, Youtube, Soundcloud, or Apple Music"
         pattern="(https:\/\/music\.youtube\.com\/.+)|(https:\/\/music\.apple\.com\/.+)|(https:\/\/soundcloud.com\/.+)|(https:\/\/open\.spotify\.com\/track\/.+)"
       title="Example URLs:
       1. https://open.spotify.com/track/track_id
       2. https://music.apple.com
       3. https://music.youtube.com
-      4. https://soundcloud.com" required>
+      4. https://soundcloud.com" style="max-width: 1118px;" required>
       </div>
     
-      <div class="col-sm-5">
-        <button type="submit" class="btn btn-primary">MUSALINK</button>
+      <div class="col-sm-5 mt-2">
+        <button type="submit" class="btn btn-primary" style="margin-left: 80px;">MUSALINK</button>
       </div>
     </form>
   
