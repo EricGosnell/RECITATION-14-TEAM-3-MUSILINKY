@@ -135,11 +135,45 @@ app.get('/search', (req, res) => {
         }
     })
 
-    .then(results => {
-        console.log(results.data);
-
+    .then(async results => {
         if (search_query != 'Test Query') {
-            res.render('pages/find', {items: results.data.data, error: false, username: user.username});
+            const items = results.data.data;
+            const MAX_ITEMS = items.length > 20 ? 20 : items.length;
+            const in_playlist = [];
+
+            const insert_song = `INSERT INTO songs 
+            (song_id, song_name, song_artist, song_album, song_preview, song_link) VALUES
+            ($1, $2, $3, $4, $5, $6);`;
+
+            const row_count_query = 'SELECT COUNT(song_id) FROM songs;';
+
+            try {
+              const row_count = await db.one(row_count_query, [], c => c.count);
+
+              if (row_count > 0) {
+                await db.none('DELETE FROM songs;');
+              }
+
+              for (let i = 0; i < MAX_ITEMS; i++) {
+                in_playlist[i] = false;
+
+                await db.none(insert_song, 
+                    [`${i + 1}`, items[i].title, items[i].artist.name, items[i].album.title, items[i].preview, items[i].link]);
+              }
+
+              const results = await db.any('SELECT * FROM songs;');
+
+              return await res.render('pages/find', {
+                items: results, 
+                error: false, 
+                username: user.username,
+                in_playlist
+                });  
+          }
+
+          catch(err) {
+            console.error(err);
+          }
         }
 
         else {
@@ -148,9 +182,15 @@ app.get('/search', (req, res) => {
         }
     })
 
-    .catch(error => {
+    .catch(async error => {
         console.error(error);
-        res.render('pages/find', {items: [], error: true, message: 'Could not retrieve results', username: user.username});
+        return await res.render('pages/find', {
+          items: [], 
+          error: true, 
+          message: 'Could not retrieve results',
+          in_playlist: [], 
+          username: user.username
+        });
     });
 });
 
@@ -574,68 +614,80 @@ app.get('/find', (req,res) => {
     res.render("pages/find");
 });
 
-app.get('/initialize_playlist', (req, res) => {
-    db.any('SELECT * FROM search_songs WHERE in_playlist = true')
-  
-    .then(playlist => {
-      res.render('pages/playlist', {playlist, action: 'delete'});
-    })
-  
-    .catch(err => {
-      res.render('pages/playlist', {
+app.get('/initialize_playlist', async (req, res) => {
+    // first find user
+
+    const find_user = `SELECT username FROM users WHERE username = '${user.username}' LIMIT 1;`;
+
+    const show_playlist = `SELECT * FROM user_playlist WHERE username = $1;`;
+
+    try {
+      const userInfo = await db.one(find_user);
+
+      const display_playlist = await db.any(show_playlist, userInfo.username);
+
+      return await res.render('pages/playlist', {
+        playlist: display_playlist,
+        error: false,
+        action: 'delete'
+      });
+    }
+
+    catch(err) {
+      return await res.render('pages/playlist', {
         playlist: [],
         error: true,
-        message: err.message
+        message: 'Could not display playlist'
       });
-    });
+    }
 });
 
-  app.get('/playlist', (req, res) => {
+  app.post('/playlist/add', async (req, res) => {
     // Query to list all the songs added in the playlist
   
-    const artist_name = `${req.query.search_artist_name}`;
-  
-    const song_title = `${req.query.search_song_title}`;
+    const results = JSON.parse(req.body.results);
 
-    const song_album = `${req.query.search_album_name}`;
+    const in_playlist = JSON.parse(req.body.in_playlist);
 
-    const song_preview = `${req.query.search_song_preview}`;
+    const IDX = parseInt(req.body.index);
 
-    const song_link = `${req.query.search_song_link}`;
+    in_playlist[IDX] = true;
   
-    const insert_query = `INSERT INTO search_songs 
-    (song_name, song_artist, song_album, song_preview, song_link, in_playlist) 
-    VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`;
+    const find_user = `SELECT username FROM users WHERE username = '${user.username}' LIMIT 1;`;
+
+    try {
+      const userInfo = await db.one(find_user);
+
+      const insert_query = `INSERT INTO user_playlist 
+      (username, song_name, song_artist, song_album, song_preview, song_link)
+      VALUES ($1, $2, $3, $4, $5, $6);`;
+
+      await db.none(insert_query, 
+        [userInfo.username, 
+          results[IDX].song_name, 
+          results[IDX].song_artist, 
+          results[IDX].song_album, 
+          results[IDX].song_preview, 
+          results[IDX].song_link]);
+
+      return await res.render('pages/find', {
+        items: results,
+        error: false,
+        in_playlist: in_playlist
+      });
   
-    const songs_in_playlist = `SELECT 
-    song_name, song_artist, song_album, song_preview, song_link 
-    FROM search_songs WHERE in_playlist = true;`;
-  
-    if (song_title != null) {
-        db.any(insert_query, [song_title, artist_name, song_album, song_preview, song_link, true])
-        .catch((err) => {
-            res.render("pages/playlist", {
-            playlist: [],
-            error: true,
-            message: err.message
-            });
-        });
     }
-  
-      db.any(songs_in_playlist)
-      .then((playlist) => {
-        res.render('pages/playlist', {
-          playlist,
-          action: 'delete'
-        });
-      })
-      .catch((err) => {
-        res.render("pages/playlist", {
-          playlist: [],
-          error: true,
-          message: err.message
-        });
-      });  
+
+    catch(err) {
+      console.log(err);
+      return await res.render('pages/find', {
+        items: [], 
+        error: true,
+        in_playlist: [], 
+        message: 'Could not insert into playlist'
+      });
+    }
+
   });  
 
   app.post("/playlist/delete", async (req, res) => {
@@ -709,87 +761,6 @@ app.get('/logout', (req,res) => {
     res.locals.message = 'Logged out.';
     res.render('pages/login');
 });
-
-app.post('/search-music', (req, res) => {
-
-    const search_query = `${req.query.search_query}`;
-
-    axios({
-        method: 'POST',
-        url: 'https://musicapi13.p.rapidapi.com/inspect/url',
-        headers: {
-            'content-type': 'application/json',
-            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
-            'X-RapidAPI-Host': 'musicapi13.p.rapidapi.com'
-        },
-        data: '{"url":"https://open.spotify.com/track/5aszL9hl6SBzFNsOvw8u8w"}',
-        params: {
-            q: search_query
-        }
-    })
-
-    .then(results => {
-        console.log(results.data);
-        res.json({message: 'Successfully retrieved data'});
-        res.render('pages/home', {items: results.data.data, error: false, username: user.username});
-    })
-
-    .catch(error => {
-        console.error(error);
-        res.render('pages/home', {items: [], error: true, message: 'Could not retrieve results', username: user.username});
-    });
-});
-
-// app.get('/playlist', (req, res) => {
-//     const added = req.query.added;
-//     // Query to list all the songs added in the playlist
-  
-//     db.any(added ? user_song : all_, [req.session.user.song_id])
-//       .then((playlist) => {
-//         res.render("pages/playlist", {
-//           playlist,
-//           action: req.query.taken ? "delete" : "add",
-//         })
-//       })
-//       .catch((err) => {
-//         res.render("pages/playlist", {
-//           playlist: [],
-//           error: true,
-//           message: err.message,
-//         });
-//       });
-//   });
-  
-//   app.post('/playlist/add', (req, res) => {
-//     const course_id = parseInt (req.body.course_id);
-//     db.tx(async (t) => {
-     
-//         await t.none(
-//             "INSERT INTO user_song(user_id, song_id) VALUES ($1, $2);",
-//             [song_id, req.session.user.user_id]
-//         );
-//         return t.any(all_song, [req.session.user.user_id]);
-//     })
-//       .then((playlist) => {
-//         console.info(playlist);
-
-//         db.any(select * from playlists)
-
-//         //db.any to select * from playlists;
-
-//         res.render("pages/playlist", {
-//           playlist,
-//           message: `Successfully added song ${req.body.song_id}`,
-//         });
-//       })
-//       .catch((err) => {
-//         res.render("pages/playlist", {
-//           playlist: [],
-//           error: true,
-//           message: err.message,
-//         });
-//       });
-// });
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
