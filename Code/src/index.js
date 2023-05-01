@@ -692,7 +692,7 @@ app.get('/initialize_playlist', async (req, res) => {
 
   app.post("/playlist/delete", async (req, res) => {
 
-    const song_id = parstInt(req.body.song_id);
+    const song_id = parseInt(req.body.song_id);
 
     const find_user = `SELECT username FROM users WHERE username = '${user.username}' LIMIT 1;`;
 
@@ -701,7 +701,7 @@ app.get('/initialize_playlist', async (req, res) => {
     try {
         const userInfo = await db.one(find_user);
 
-        await db.any(delete_query, [user.Info.username, song_id]);
+        await db.any(delete_query, [userInfo.username, song_id]);
 
         return await res.redirect('/initialize_playlist');
     }

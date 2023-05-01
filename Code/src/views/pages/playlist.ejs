@@ -50,7 +50,7 @@
                         </td>
                         <td>
                             <% if (locals.action == 'delete') { %>
-                                    <form action="/delete" method="POST">
+                                    <form action="/playlist/delete" method="POST">
                                         <input type="hidden" name="song_id" class="nav-link" value = "<%- song.song_id %>"/>
                                         <button type="submit" class="btn btn-sm btn-outline-danger">DELETE</button>
                                     </form>
