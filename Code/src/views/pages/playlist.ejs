@@ -28,10 +28,10 @@
             </tr>
             <tbody>
                 <% if (!locals.error) {  %>
-                <% playlist.forEach(function(song){  %>
+                <% playlist.forEach(function(song, idx){  %>
                     <tr>
                         <td>
-                            <%= song.song_id %>
+                            <%= idx + 1 %>
                         </td>
                         <td>
                             <%= song.song_name %>
