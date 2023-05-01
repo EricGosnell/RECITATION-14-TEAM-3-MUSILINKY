@@ -17,7 +17,7 @@
         </div>
         <% } %>
 
-        <table>
+        <table class="table">
             <tr>
               <th>Song ID</th>
               <th>Song Name</th>
@@ -27,9 +27,8 @@
               <th>Song Link</th>
             </tr>
             <tbody>
-                <% if (locals.error == false) {  %>
+                <% if (!locals.error) {  %>
                 <% playlist.forEach(function(song){  %>
-                <!-- <% for (var i =1; i <= playlist.length;  i++ ) { %> -->
                     <tr>
                         <td>
                             <%= song.song_id %>
@@ -44,13 +43,16 @@
                             <%= song.song_album %>
                         </td>
                         <td>
+                            <audio controls><source src="<%- song.song_preview %>"></audio>
+                        </td>
+                        <td>
                             <a href="<%= song.song_link %>" target="_blank"> Song Link </a>
                         </td>
                         <td>
                             <% if (locals.action == 'delete') { %>
                                     <form action="/delete" method="POST">
                                         <input type="hidden" name="song_id" class="nav-link" value = "<%- song.song_id %>"/>
-                                        <!-- <button type="submit" class="btn btn-sm btn-outline-danger">DELETE</button> -->
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">DELETE</button>
                                     </form>
                             <% } else { %>
                                 <% if (!song.taken) { %>
@@ -69,7 +71,6 @@
                     <% }); %> 
                     <% } %> 
                     </tr>
-                <!-- <% } %> -->
             </tbody>
           </table>
     </div>
