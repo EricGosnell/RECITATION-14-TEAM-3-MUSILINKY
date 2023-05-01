@@ -640,7 +640,6 @@ app.get('/initialize_playlist', async (req, res) => {
         message: 'Could not display playlist'
       });
     }
-
 });
 
   app.post('/playlist/add', async (req, res) => {
@@ -690,6 +689,33 @@ app.get('/initialize_playlist', async (req, res) => {
     }
 
   });  
+
+  app.post("/playlist/delete", async (req, res) => {
+
+    const song_id = parstInt(req.body.song_id);
+
+    const find_user = `SELECT username FROM users WHERE username = '${user.username}' LIMIT 1;`;
+
+    const delete_query = 'DELETE FROM user_playlist WHERE username = $1 and song_id = $2;';
+
+    try {
+        const userInfo = await db.one(find_user);
+
+        await db.any(delete_query, [user.Info.username, song_id]);
+
+        return await res.redirect('/initialize_playlist');
+    }
+    catch(err) {
+        console.error(err);
+
+        return await res.render('pages/playlist', {
+            playlist: [],
+            error: true,
+            message: 'Could not delete song.'
+        });  
+        
+    };
+  });
 
 app.get('/profile', (req,res) => {
     const getFriends = "SELECT * from users WHERE user_id = SELECT user2_id from connections WHERE user1_id = ${req.session.user.user_id}"

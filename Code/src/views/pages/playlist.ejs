@@ -22,10 +22,14 @@
               <th>Song ID</th>
               <th>Song Name</th>
               <th>Song Artist</th>
-              <th>Song Length</th>
+              <th>Song Album</th>
+              <th>Song Preview</th>
+              <th>Song Link</th>
             </tr>
             <tbody>
+                <% if (locals.error == false) {  %>
                 <% playlist.forEach(function(song){  %>
+                <!-- <% for (var i =1; i <= playlist.length;  i++ ) { %> -->
                     <tr>
                         <td>
                             <%= song.song_id %>
@@ -37,30 +41,35 @@
                             <%= song.song_artist %>
                         </td>
                         <td>
-                            <%= song.song_length %>
+                            <%= song.song_album %>
+                        </td>
+                        <td>
+                            <a href="<%= song.song_link %>" target="_blank"> Song Link </a>
                         </td>
                         <td>
                             <% if (locals.action == 'delete') { %>
-                                    <form action="/courses/delete" method="POST">
+                                    <form action="/delete" method="POST">
                                         <input type="hidden" name="song_id" class="nav-link" value = "<%- song.song_id %>"/>
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">DELETE</button>
+                                        <!-- <button type="submit" class="btn btn-sm btn-outline-danger">DELETE</button> -->
                                     </form>
                             <% } else { %>
                                 <% if (!song.taken) { %>
-                                    <form action="/courses/" method="POST">
+                                    <form action="/playlist" method="POST">
                                         <input type="hidden" name="song_id" class="nav-link" value = "<%- song.song_id %>"/>
                                         <button type="submit" class="btn btn-sm btn-outline-success">ADD</button>
                                     </form>
                                 <% } else { %>
-                                    <form action="/courses/add" method="POST">
+                                    <form action="/playlist" method="POST">
                                         <input type="hidden" name="song_id" class="nav-link" value = "<%- song.song_id %>"/>
                                         <button type="submit" class="btn btn-sm btn-outline-success" disabled>ADD</button>
                                     </form>
                                 <%}%> 
                             <%}%>
                         </td>
-                <% }) %> 
-                </tr>
+                    <% }); %> 
+                    <% } %> 
+                    </tr>
+                <!-- <% } %> -->
             </tbody>
           </table>
     </div>
