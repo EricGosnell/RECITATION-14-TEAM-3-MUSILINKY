@@ -85,6 +85,7 @@ app.get("/register", (req, res) => {
 });
 app.post('/register', async (req, res) => {
     //hash the password using bcrypt library
+    console.log(req.body.password)
     const hash = await bcrypt.hash(req.body.password, 10);
 
     // To-DO: Insert username and hashed password into 'users' table
@@ -116,6 +117,31 @@ app.get("/login", (req, res) => {
     else {
         res.render("pages/login");
     }
+});
+
+// Login submission
+app.post("/login", async (req, res) => {
+  const query = `select * from users where username = '${req.body.username}' limit 1;`;
+  db.one(query)
+      .then(async data => {
+          if (await bcrypt.compare(req.body.password, data.password)) {
+              user.username = req.body.username;
+              user.password = req.body.password;
+
+              req.session.user = user;
+              req.session.save();
+
+              res.redirect("/home");
+          } else {
+              res.locals.message = "Incorrect username or password.";
+              res.render("pages/login")
+          }
+      })
+      .catch((err) => {
+          console.log(err);
+          res.locals.message = "Login failed.";
+          res.render("pages/login");
+      });
 });
 
 // Search - GET (user Deezer API)
@@ -567,32 +593,6 @@ app.get('/MUSALINK', async (req, res) => {
 
     }
 });  
-
-// Login submission
-app.post("/login", async (req, res) => {
-    const query = `select * from users where username = '${req.body.username}' limit 1;`;
-
-    db.one(query)
-        .then(async data => {
-            if (await bcrypt.compare(req.body.password, data.password)) {
-                user.username = req.body.username;
-                user.password = req.body.password;
-
-                req.session.user = user;
-                req.session.save();
-
-                res.redirect("/home");
-            } else {
-                res.locals.message = "Incorrect username or password.";
-                res.render("pages/login")
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-            res.locals.message = "Login failed.";
-            res.render("pages/login");
-        });
-});
 
 // Authentication Middleware.
 const auth = (req, res, next) => {

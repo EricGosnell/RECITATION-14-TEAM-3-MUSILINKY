@@ -1,41 +1,56 @@
 <%- include ('../partials/header') %>
-<%- include ('../partials/menu') %>
-<div class="col"><%- include ('../partials/message') %></div>
+    <div class="col"><%- include ('../partials/message') %></div>
 
-<main>
-    <div class="container">
-        <div class="col-sm-5" style="margin: auto">
-            <br><h2>Register</h2><br>
-            <form action="/register" method="post">
-                <div class="row">
-                    <div class="col-2">
-                        <label for="username">Username:</label>
-                    </div>
-                    <div class="col">
-                        <input class="form-control" type="text" id="username" name="username" />
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-2">
-                        <label for="password">Password:</label>
-                    </div>
-                    <div class="col">
-                        <input class="form-control" type="password" id="password" name="password" />
+    <main>
+        <div class="background"></div>
+        <div class="container">
+            <div class="content">
+                <h2 class="logo"><i class='bx bxl-deezer'></i> MUSILINKY</h2>
+
+                <div class="text-sci">
+                    <h2>Welcome!<br><span>This is MUSILINKY.</span></h2>
+
+                    <p> BOOP BEEP BOP!</p>
+                    <div class="social-icons">
+                        <a href="#"><i class='bx bxl-youtube'></i></a>
+                        <a href="#"><i class='bx bxl-spotify'></i></a>
+                        <a href="#"><i class='bx bxl-soundcloud'></i></a>
+                        <a href="#"><i class='bx bxl-apple'></i></a>
                     </div>
                 </div>
-                <hr>
-                <div class="row">
-                    <div class="col-10">
-                        <footer>Already have an account? <a href="/login">Login</a></footer>
-                    </div>
-                    <div class="col-1">
-                        <input class="btn btn-outline-primary" type="submit" value="Register"/>
-                    </div>
+            </div>
+
+            <div class="logreg-box">
+                <div class="form-box register">
+                    <form action="/register" method="post">
+                        <h2>Sign Up</h2>
+
+                        <div class="input-box">
+                            <span class="icon"><i class='bx bx-user-pin'></i></span>
+                            <input type="username" required id="username" name="username">
+                            <label>Username</label>
+                        </div>
+
+                        <div class="input-box">
+                            <span class="icon"><i class='bx bxs-lock-alt'></i></span>
+                            <input type="password" required id="password" name="password">
+                            <label>Password</label>
+                        </div>
+
+                        <div class="remember-forgot">
+                            <label><input type="checkbox">I agree to the terms & conditions</label>
+
+                        </div>
+
+                        <button type="submit" class="btn">Sign up</button>
+
+                        <div class="login-register">
+                            <p>Already have an account? <a href="/login">Sign in</a></p>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<%- include ('../partials/footer') %>
+    <%- include ('../partials/footer') %>
