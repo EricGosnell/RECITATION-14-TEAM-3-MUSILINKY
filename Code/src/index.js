@@ -135,11 +135,45 @@ app.get('/search', (req, res) => {
         }
     })
 
-    .then(results => {
-        console.log(results.data);
-
+    .then(async results => {
         if (search_query != 'Test Query') {
-            res.render('pages/find', {items: results.data.data, error: false, username: user.username});
+            const items = results.data.data;
+            const MAX_ITEMS = items.length > 20 ? 20 : items.length;
+            const in_playlist = [];
+
+            const insert_song = `INSERT INTO songs 
+            (song_id, song_name, song_artist, song_album, song_preview, song_link) VALUES
+            ($1, $2, $3, $4, $5, $6);`;
+
+            const row_count_query = 'SELECT COUNT(song_id) FROM songs;';
+
+            try {
+              const row_count = await db.one(row_count_query, [], c => c.count);
+
+              if (row_count > 0) {
+                await db.none('DELETE FROM songs;');
+              }
+
+              for (let i = 0; i < MAX_ITEMS; i++) {
+                in_playlist[i] = false;
+
+                await db.none(insert_song, 
+                    [`${i + 1}`, items[i].title, items[i].artist.name, items[i].album.title, items[i].preview, items[i].link]);
+              }
+
+              const results = await db.any('SELECT * FROM songs;');
+
+              return await res.render('pages/find', {
+                items: results, 
+                error: false, 
+                username: user.username,
+                in_playlist
+                });  
+          }
+
+          catch(err) {
+            console.error(err);
+          }
         }
 
         else {
@@ -148,9 +182,15 @@ app.get('/search', (req, res) => {
         }
     })
 
-    .catch(error => {
+    .catch(async error => {
         console.error(error);
-        res.render('pages/find', {items: [], error: true, message: 'Could not retrieve results', username: user.username});
+        return await res.render('pages/find', {
+          items: [], 
+          error: true, 
+          message: 'Could not retrieve results',
+          in_playlist: [], 
+          username: user.username
+        });
     });
 });
 
@@ -578,40 +618,152 @@ app.get('/profile', (req,res) => {
     res.render("pages/profile");
 });
 
+app.get('/initialize_playlist', async (req, res) => {
+    // first find user
+
+    const find_user = `SELECT username FROM users WHERE username = '${user.username}' LIMIT 1;`;
+
+    const show_playlist = `SELECT * FROM user_playlist WHERE username = $1;`;
+
+    try {
+      const userInfo = await db.one(find_user);
+
+      const display_playlist = await db.any(show_playlist, userInfo.username);
+
+      return await res.render('pages/playlist', {
+        playlist: display_playlist,
+        error: false,
+        action: 'delete'
+      });
+    }
+
+    catch(err) {
+      return await res.render('pages/playlist', {
+        playlist: [],
+        error: true,
+        message: 'Could not display playlist'
+      });
+    }
+});
+
+  app.post('/playlist/add', async (req, res) => {
+    // Query to list all the songs added in the playlist
+  
+    const results = JSON.parse(req.body.results);
+
+    const in_playlist = JSON.parse(req.body.in_playlist);
+
+    const IDX = parseInt(req.body.index);
+
+    in_playlist[IDX] = true;
+  
+    const find_user = `SELECT username FROM users WHERE username = '${user.username}' LIMIT 1;`;
+
+    try {
+      const userInfo = await db.one(find_user);
+
+      const insert_query = `INSERT INTO user_playlist 
+      (username, song_name, song_artist, song_album, song_preview, song_link)
+      VALUES ($1, $2, $3, $4, $5, $6);`;
+
+      await db.none(insert_query, 
+        [userInfo.username, 
+          results[IDX].song_name, 
+          results[IDX].song_artist, 
+          results[IDX].song_album, 
+          results[IDX].song_preview, 
+          results[IDX].song_link]);
+
+      return await res.render('pages/find', {
+        items: results,
+        error: false,
+        in_playlist: in_playlist
+      });
+  
+    }
+
+    catch(err) {
+      console.log(err);
+      return await res.render('pages/find', {
+        items: [], 
+        error: true,
+        in_playlist: [], 
+        message: 'Could not insert into playlist'
+      });
+    }
+
+  });  
+
+  app.post("/playlist/delete", async (req, res) => {
+
+    const song_id = parseInt(req.body.song_id);
+
+    const find_user = `SELECT username FROM users WHERE username = '${user.username}' LIMIT 1;`;
+
+    const delete_query = 'DELETE FROM user_playlist WHERE username = $1 and song_id = $2;';
+
+    try {
+        const userInfo = await db.one(find_user);
+
+        await db.any(delete_query, [userInfo.username, song_id]);
+
+        return await res.redirect('/initialize_playlist');
+    }
+    catch(err) {
+        console.error(err);
+
+        return await res.render('pages/playlist', {
+            playlist: [],
+            error: true,
+            message: 'Could not delete song.'
+        });  
+        
+    };
+  });
+
+app.get('/profile', (req,res) => {
+    const getFriends = "SELECT * from users WHERE user_id = SELECT user2_id from connections WHERE user1_id = ${req.session.user.user_id}"
+    res.render("pages/profile");
+    db.any(getFriends)
+        .then((friends) => {
+            res.render("pages/profile", {
+                friends,
+                action: `${req.query.username}`,
+            });
+        })
+        .catch((err) => {
+            res.render("pages/profile", {
+                friends: [],
+                error: true,
+                message: err.message,
+            });
+        });
+});
+
+app.post('/addFriend', (req,res) => {
+    const add =
+        'INSERT INTO connections (user1_id. user2_id) values ($1, $2), ($2, $1)  returning * ;';
+    db.any(add, [
+        req.session.user.user_id,
+        req.query.user2_id
+        //     TODO: username to user_id
+    ])
+        .then(function (data) {
+            res.status(201).json({
+                status: 'success',
+                data: data,
+                message: 'Friend added successfully',
+            });
+        })
+        .catch(function (err) {
+            return console.log(err);
+        });
+});
+
 app.get('/logout', (req,res) => {
     req.session.destroy();
     res.locals.message = 'Logged out.';
-    res.render('pages/logout');
-});
-
-app.post('/search-music', (req, res) => {
-
-    const search_query = `${req.query.search_query}`;
-
-    axios({
-        method: 'POST',
-        url: 'https://musicapi13.p.rapidapi.com/inspect/url',
-        headers: {
-            'content-type': 'application/json',
-            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
-            'X-RapidAPI-Host': 'musicapi13.p.rapidapi.com'
-        },
-        data: '{"url":"https://open.spotify.com/track/5aszL9hl6SBzFNsOvw8u8w"}',
-        params: {
-            q: search_query
-        }
-    })
-
-    .then(results => {
-        console.log(results.data);
-        res.json({message: 'Successfully retrieved data'});
-        res.render('pages/home', {items: results.data.data, error: false, username: user.username});
-    })
-
-    .catch(error => {
-        console.error(error);
-        res.render('pages/home', {items: [], error: true, message: 'Could not retrieve results', username: user.username});
-    });
+    res.render('pages/login');
 });
 
 // *****************************************************

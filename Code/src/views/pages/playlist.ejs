@@ -1,2 +1,79 @@
 <%- include ('../partials/header') %>
 <%- include ('../partials/menu') %>
+<div class="col"><%- include ('../partials/message') %></div>
+
+
+<main>
+    <div class="container">
+    <style>
+        .container {margin-top:100px;}
+    </style>
+    <% if (locals.message) { %>
+        <div
+          class="alert alert-<%- locals.error ? 'danger' : 'success' %>"
+          role="alert"
+        >
+          <%= message %>
+        </div>
+        <% } %>
+
+        <table class="table">
+            <tr>
+              <th>Song ID</th>
+              <th>Song Name</th>
+              <th>Song Artist</th>
+              <th>Song Album</th>
+              <th>Song Preview</th>
+              <th>Song Link</th>
+            </tr>
+            <tbody>
+                <% if (!locals.error) {  %>
+                <% playlist.forEach(function(song, idx){  %>
+                    <tr>
+                        <td>
+                            <%= idx + 1 %>
+                        </td>
+                        <td>
+                            <%= song.song_name %>
+                        </td>
+                        <td>
+                            <%= song.song_artist %>
+                        </td>
+                        <td>
+                            <%= song.song_album %>
+                        </td>
+                        <td>
+                            <audio controls><source src="<%- song.song_preview %>"></audio>
+                        </td>
+                        <td>
+                            <a href="<%= song.song_link %>" target="_blank"> Song Link </a>
+                        </td>
+                        <td>
+                            <% if (locals.action == 'delete') { %>
+                                    <form action="/playlist/delete" method="POST">
+                                        <input type="hidden" name="song_id" class="nav-link" value = "<%- song.song_id %>"/>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">DELETE</button>
+                                    </form>
+                            <% } else { %>
+                                <% if (!song.taken) { %>
+                                    <form action="/playlist" method="POST">
+                                        <input type="hidden" name="song_id" class="nav-link" value = "<%- song.song_id %>"/>
+                                        <button type="submit" class="btn btn-sm btn-outline-success">ADD</button>
+                                    </form>
+                                <% } else { %>
+                                    <form action="/playlist" method="POST">
+                                        <input type="hidden" name="song_id" class="nav-link" value = "<%- song.song_id %>"/>
+                                        <button type="submit" class="btn btn-sm btn-outline-success" disabled>ADD</button>
+                                    </form>
+                                <%}%> 
+                            <%}%>
+                        </td>
+                    <% }); %> 
+                    <% } %> 
+                    </tr>
+            </tbody>
+          </table>
+    </div>
+</main>
+
+<%- include ('../partials/footer') %>
