@@ -1,5 +1,4 @@
 <%- include ('../partials/header') %>
-
 <div class="col"><%- include ('../partials/message') %></div>
 
 <main>
@@ -28,69 +27,25 @@
 
                         <div class="input-box">
                             <span class="icon"><i class='bx bx-user-pin' ></i></span>
-                            <input type="text" name="username" required>
+                            <input type="username" required id = "username" name = "username">
                             <label>Username</label>
                         </div>
 
                         <div class="input-box">
                             <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
-                            <input type="password" name="password" required>
+                            <input type="password" required id = "password" name = "password">
                             <label>Password</label>
                         </div>
 
-                        <button type="submit" class="btn" href="/home">Sign in</button>
+                        <button type="submit" class="btn">Sign in</button>
 
                         <div class="login-register">
-                            <p>Don't have an account? <a href="#" class="register-link">Sign up</a></p>
+                            <p>Don't have an account? <a href="/register">Sign up</a></p>
                         </div>
                     </form>
                 </div>
-
-                <div class="form-box register">
-                    <form action="/register" method="post">
-                        <h2>Sign Up</h2>
-
-                        <div class="input-box">
-                            <span class="icon"><i class='bx bx-user-pin' ></i></span>
-                            <input type="text" name="username" required>
-                            <label>Username</label>
-                        </div>
-
-                        <div class="input-box">
-                            <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
-                            <input type="password" name="password" required>
-                            <label>Password</label>
-                        </div>
-
-                        <div class="remember-forgot">
-                            <label><input type="checkbox">I agree to the terms & conditions</label>
-                            
-                        </div>
-
-                        <button type="submit" class="btn">Sign up</button>
-
-                        <div class="login-register">
-                            <p>Already have an account? <a href="#" class="login-link">Sign in</a></p>
-                        </div>
-                    </form>
-                </div>
-
             </div>
         </div>
-
-        <script>
-            const logregBox = document.querySelector('.logreg-box');
-            const loginLink = document.querySelector('.login-link');
-            const registerLink = document.querySelector('.register-link');
-
-            registerLink.addEventListener('click', () => {
-                logregBox.classList.add('active');
-            });
-
-            loginLink.addEventListener('click', () => {
-                logregBox.classList.remove('active');
-            });
-        </script>
 </main>
 
 <%- include ('../partials/footer') %>
