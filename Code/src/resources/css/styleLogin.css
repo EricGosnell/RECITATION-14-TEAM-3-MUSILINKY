@@ -343,14 +343,14 @@ header {
 }
 
 .logreg-box .form-box.register{
-    transform: translateX(430px);
+    transform: translateX(0);
     transition: transform .6s ease;
     transition-delay: 0s;
 }
 
 .logreg-box.active .form-box.register{
-    transform: translateX(0);
-    transition-delay: .7s;
+    transform: translateX(430px);
+    transition-delay: .0s;
 }
 
 .form-box h2{
