@@ -571,14 +571,15 @@ app.get('/find', (req,res) => {
     res.render("pages/find");
 });
 
+const all_friends = `SELECT users.username CASE WHEN users.user_id IN (SELECT user2_id FROM connections WHERE user1_id = $1) END FROM users ORDER_BY users.user_id ASC;`;
+// const all_friends = `SELECT username FROM users ORDER BY user_id ASC;`;
 app.get('/profile', (req,res) => {
-    const getFriends = "SELECT * from users WHERE user_id = SELECT user2_id from connections WHERE user1_id = ${req.session.user.user_id}"
+    // const getFriends = "SELECT * from users WHERE user_id = SELECT user2_id from connections WHERE user1_id = ${req.session.user.user_id}"
     res.render("pages/profile");
-    db.any(getFriends)
+    db.any(all_friends, [req.session.user.user_id])
         .then((friends) => {
             res.render("pages/profile", {
-                friends,
-                action: `${req.query.username}`,
+                friends
             });
         })
         .catch((err) => {

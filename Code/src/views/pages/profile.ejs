@@ -21,6 +21,10 @@
   </div>
 
   <h1>Friends</h1>
+  <% friends.forEach(function(friend) { %>
+    <a href="/profile"><%= friend.username %></a>
+    <!--    TODO: link to friends profile page -->
+  <% }); %>
   <!--        TODO: Remove friend button -->
   <div>
     <h2>Add Friend: </h2>
