@@ -135,6 +135,16 @@
               </tr>
               <% } %>
 
+              <% if (deezer_link !== undefined) { %>
+                <tr>
+                  <td><%- track_name %></td>
+                  <td><%- album_name %></td>
+                  <td><%- artist_name %></td>
+                  <td>Deezer</td>
+                  <td><a href="<%- deezer_link %>" target="_blank">Link</a></td>
+                </tr>
+                <% } %>  
+
             </table>
             <% } %>
         </div>
