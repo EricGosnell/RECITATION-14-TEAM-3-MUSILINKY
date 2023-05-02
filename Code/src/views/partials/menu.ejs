@@ -1,10 +1,42 @@
+<%- include ('../partials/header') %>
+
 <header>
-    <h2 class="logo"> MUSILINKY </h2>
+    <h2 class="logo"><i class='bx bxl-deezer' ></i> MUSILINKY </h2>
     <nav class="navigation">
-        <a href="/home"><button class="btnHome-popup">Home</button></a>
-        <a href="/find"><button class="btnFind-popup">Search</button></a>
-        <a href="/profile"><button class="btnLogout-popup">Profile</button></a>
-        <a href="/initialize_playlist"><button class="btnPlaylist-popup">Playlist</button></a>
-        <a href="/logout"><button class="btnLogout-popup">Logout</button></a>
-    </nav>
+        <a href="/home"> Home </a>
+        <a href="/find"> Search </a>
+        <a href="/playlist"> Playlist </a>
+        <!-- <button class="btnLogin-popup">Login</a></button>  -->
+        <img src="https://static.vecteezy.com/system/resources/thumbnails/002/534/006/small/social-media-chatting-online-blank-profile-picture-head-and-body-icon-people-standing-icon-grey-background-free-vector.jpg" class="profile-page" onclick="toggleMenu()">
+
+        <div class="sub-menu-wrap" id="subMenu">
+            <div class="sub-menu">
+                <div class="user-info">
+                    <img src="https://static.vecteezy.com/system/resources/thumbnails/002/534/006/small/social-media-chatting-online-blank-profile-picture-head-and-body-icon-people-standing-icon-grey-background-free-vector.jpg">
+                    <h3>Welcome User!</h3>
+                </div>
+                <hr>
+                    
+                <a href="/profile" class="sub-menu-link">
+                    <!-- <img src="#"> -->
+                    <p><i class='bx bxs-user-account'></i> Edit Profile </p>
+                    <span>></span>
+                </a>
+
+                <a href="/login" class="sub-menu-link">
+                    <!-- <img src="#"> -->
+                    <p><i class='bx bxs-door-open' ></i> Logout </p>
+                    <span>></span>
+                </a>
+            </div>
+        </div>
+    </nav>   
 </header>
+
+<script>
+    let subMenu = document.getElementById("subMenu");
+
+    function toggleMenu(){
+        subMenu.classList.toggle("open-menu");
+    }
+</script>

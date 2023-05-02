@@ -590,7 +590,7 @@ app.post("/login", async (req, res) => {
         .catch((err) => {
             console.log(err);
             res.locals.message = "Login failed.";
-            res.render("pages/register");
+            res.render("pages/login");
         });
 });
 
@@ -612,6 +612,10 @@ app.get('/home', (req,res) => {
 
 app.get('/find', (req,res) => {
     res.render("pages/find");
+});
+
+app.get('/profile', (req,res) => {
+    res.render("pages/profile");
 });
 
 app.get('/initialize_playlist', async (req, res) => {

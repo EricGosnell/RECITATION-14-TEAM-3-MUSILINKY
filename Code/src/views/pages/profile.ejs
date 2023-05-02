@@ -1,24 +1,61 @@
-<%- include ('../partials/header') %>
+<!-- <%- include ('../partials/header') %> -->
 <%- include ('../partials/menu') %>
 <div class="col"><%- include ('../partials/message') %></div>
 
 <main>
+  <div class="hero-header">
+    <div class="navi-bar">
+        <div class="pfp-image"> 
+            <!-- container -->
+            <div class="pfp">
+                <img src="https://static.vecteezy.com/system/resources/thumbnails/002/534/006/small/social-media-chatting-online-blank-profile-picture-head-and-body-icon-people-standing-icon-grey-background-free-vector.jpg" alt="profile pic">
+            </div>
 
-<h1>Profile Information</h1>
-<div>
-    <h2>Username:</h2>
-    <p><strong>Sample Username</strong></p>
-  </div>
-  
-  <div>
-    <h2>About:</h2>
-    <p><strong><br>Sample Description</strong></p>
-  </div>
-  
-  <div>
-    <h2>Date Joined:</h2>
-    <p><strong>1/1/2023</strong></p>
-  </div>
+            <div class="pfp-text">
+                <h5>Welcome <span class="input">Listener,</span></h5>
+                <h1>Guest User</h1>
+                <p>
+                    "Music gives a soul to the universe, wings to the mind, flight to the imagination and life to everything." 
+                    -Plato
+                </p>
+                <hr>
+                <p>
+                    <strong>Date joined: 1/1/2023</strong>
+                </p>
+
+                <div class="button-group">
+                    <a href="#" class="btn active"> Add Friends</a>
+                    <a target="_blank" href="https://topsify.com/us" class="btn"> Your Playlists </a>
+                </div>
+
+                <div class="socials">
+                    <a href="#"><i class='bx bxl-github' ></i></a>
+                    <a href="#"><i class='bx bxl-youtube' ></i></a>
+                    <a href="#"><i class='bx bxl-soundcloud' ></i></a>
+                    <a href="#"><i class='bx bxl-spotify' ></i></a>
+                    <a href="#"><i class='bx bxl-apple' ></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <script>
+    var togglebutton = document.querySelector(".togglebutton");
+    var nav = document.querySelector(".navi-links");
+    var links = document.querySelector(".navi-links li");
+
+    togglebutton.addEventListener("click", function(){
+        this.classList.toggle("click");
+        nav.classList.toggle("open");
+    })
+
+    var typed = new Typed(".input",{
+        strings:["Listener", "melomaniac", "Music Enthusiast"],
+        typedspeed:70,
+        backspeed:55,
+        loop:true
+    })
+</script> -->
 
   <h1>Friends</h1>
   <!--        TODO: Remove friend button -->

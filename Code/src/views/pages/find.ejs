@@ -116,13 +116,88 @@
           </tr>
           <% } %>
 
-        <% if (soundcloud_link !== undefined) { %>
+    <div class="row">
+      <form action="/search" method="get">
+        <div class="col">
+          <div class="search_box">
+              <input name="search_query" type="text" class="form-control" placeholder="Search keywords for Albums, Genres, Artists, or Tracks" required>
+          </div>
+        </div>
+
+        <div class="col">
+            <div class="search_button">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+
+        <%- include ('../partials/message') %>
+
+          <% if (locals.error == false) { const MAX_ITEMS = items.length > 20 ? 20 : items.length; %>
+      
+            <table class="table">
+              <th scope="row"></th>
+              <th scope="col">Title</th>
+              <th scope="col">Artist</th>
+              <th scope="col">Album</th>
+              <th scope="col">Preview</th>
+              <th scope="col">Link</th>
+            <% for (let i = 0; i < MAX_ITEMS; i++) { %>
+              <tr>
+                <th><%- i + 1 %></th>
+                <td><%- items[i].title %></td>
+                <td><%- items[i].artist.name %></td>
+                <td><%- items[i].album.title %></td>
+                <td><audio controls><source src="<%- items[i].preview %>"></audio></td>
+                <td><a href="<%- items[i].link %>" target="_blank">Song Link</a></td>
+              </tr>
+              <% } %>
+            </table>
+          <% } %>
+      </form>
+        
+      <form action="/MUSALINK" method="get">
+        <div class="col">
+          <div class="link-search">
+              <input name="musalink_query" type="text" class="form-control" 
+              placeholder="Enter a track link on Spotify, Youtube, Soundcloud, or Apple Music"
+              pattern="(https:\/\/music\.youtube\.com\/.+)|(https:\/\/music\.apple\.com\/.+)|(https:\/\/soundcloud.com\/.+)|(https:\/\/open\.spotify\.com\/track\/.+)"
+            title="Example URLs:
+            1. https://open.spotify.com/track/track_id
+            2. https://music.apple.com
+            3. https://music.youtube.com
+            4. https://soundcloud.com" required>
+          </div>
+        </div>
+
+        <div class="col">
+            <div class="link-search-button">
+                <button type="submit" class="btn btn-primary">MUSALINK</button>
+            </div>
+        </div>
+
+        <% if (locals.message_1) { %>
+          <div
+            class="alert alert-<%- locals.error_1 ? 'danger' : 'success' %>"
+            role="alert">
+            <%= message_1 %>
+          </div>
+          <% } %>
+      
+        <% if (locals.error_1 == false) { %>
+        <table class="table">
+          <th>Track</th>
+          <th>Album</th>
+          <th>Artist</th>
+          <th>Platform</th>
+          <th>Link</th>
+      
+          <% if (spotify_link !== undefined) { %>
           <tr>
             <td><%- track_name %></td>
             <td><%- album_name %></td>
             <td><%- artist_name %></td>
-            <td>Soundcloud</td>
-            <td><a href="<%- soundcloud_link %>" target="_blank">Link</a></td>
+            <td>Spotify</td>
+            <td><a href="<%- spotify_link %>" target="_blank">Link</a></td>
           </tr>
           <% } %>
   
