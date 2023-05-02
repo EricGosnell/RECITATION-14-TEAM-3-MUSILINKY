@@ -3,39 +3,6 @@
 <div class="col"><%- include ('../partials/message') %></div>
 
 <main>
-    <!-- <div class="container">
-        <div class="col-sm-5" style="margin: auto">
-            <br><h2>Login</h2><br>
-            <form action="/login" method="post">
-                <div class="row">
-                    <div class="col-2">
-                        <label for="username">Username:</label>
-                    </div>
-                    <div class="col">
-                        <input class="form-control" type="text" id="username" name="username" />
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-2">
-                        <label for="password">Password:</label>
-                    </div>
-                    <div class="col">
-                        <input class="form-control" type="password" id="password" name="password" />
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-10">
-                        <footer>Don't have an account? <a href="/register">Register</a></footer>
-                    </div>
-                    <div class="col">
-                        <input class="btn btn-outline-primary" type="submit" value="Login"/>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div> -->
     <div class="background"></div>
         <div class="container">
             <div class="content">
@@ -61,13 +28,13 @@
 
                         <div class="input-box">
                             <span class="icon"><i class='bx bx-user-pin' ></i></span>
-                            <input type="username" required>
+                            <input type="text" name="username" required>
                             <label>Username</label>
                         </div>
 
                         <div class="input-box">
                             <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
-                            <input type="password" required>
+                            <input type="password" name="password" required>
                             <label>Password</label>
                         </div>
 
@@ -80,18 +47,18 @@
                 </div>
 
                 <div class="form-box register">
-                    <form action="/register">
+                    <form action="/register" method="post">
                         <h2>Sign Up</h2>
 
                         <div class="input-box">
                             <span class="icon"><i class='bx bx-user-pin' ></i></span>
-                            <input type="username" required>
+                            <input type="text" name="username" required>
                             <label>Username</label>
                         </div>
 
                         <div class="input-box">
                             <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
-                            <input type="password" required>
+                            <input type="password" name="password" required>
                             <label>Password</label>
                         </div>
 
