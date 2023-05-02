@@ -1,3 +1,5 @@
+TA Meeting Logs
+
 Minutes of the Meeting - 4/12/23
 
 1. Decisions made
@@ -21,7 +23,7 @@ Minutes of the Meeting - 4/12/23
   Add release notes for future meetings.
   Release notes can be automated or manual. 
 
-Minutes of the Meeting -4/19/23
+Minutes of the Meeting - 4/19/23
 
 1. One working application
 
@@ -35,3 +37,17 @@ Minutes of the Meeting -4/19/23
 3. Commit table
 
   A commit table is needed to track commits and current activity. Communication and work good overall.
+  
+Minutes of the Meeting - 4/26/23 -
+
+1. More consistent commits through the week. Ideally we should have about 4 commits each every week.
+
+2. Project Board
+  
+  For next week, significant changes need to be made to the project board. User stories and epics should be renamed to be accurate, follow the template for the "buttons on community page" example.
+
+3. Project seems to be about 70% complete, so we should work hard to complete the project over the next few days.
+  
+Minutes of the Meeting - 5/3/23 -
+  
+  See email
