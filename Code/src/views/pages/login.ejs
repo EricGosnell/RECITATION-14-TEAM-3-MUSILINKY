@@ -1,9 +1,9 @@
 <%- include ('../partials/header') %>
-<%- include ('../partials/menu') %>
+
 <div class="col"><%- include ('../partials/message') %></div>
 
 <main>
-    <div class="container">
+    <!-- <div class="container">
         <div class="col-sm-5" style="margin: auto">
             <br><h2>Login</h2><br>
             <form action="/login" method="post">
@@ -35,7 +35,95 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div> -->
+    <div class="background"></div>
+        <div class="container">
+            <div class="content">
+                <h2 class="logo"><i class='bx bxl-deezer' ></i> MUSILINKY</h2>
+
+                <div class="text-sci">
+                    <h2>Welcome!<br><span>This is MUSILINKY.</span></h2>
+
+                    <p> BOOP BEEP BOP!</p>
+                    <div class="social-icons">
+                        <a href="#"><i class='bx bxl-youtube' ></i></a>
+                        <a href="#"><i class='bx bxl-spotify' ></i></a>
+                        <a href="#"><i class='bx bxl-soundcloud' ></i></a>
+                        <a href="#"><i class='bx bxl-apple' ></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="logreg-box">
+                <div class="form-box login">
+                    <form action="/login" method="post">
+                        <h2>Sign in</h2>
+
+                        <div class="input-box">
+                            <span class="icon"><i class='bx bx-user-pin' ></i></span>
+                            <input type="username" required>
+                            <label>Username</label>
+                        </div>
+
+                        <div class="input-box">
+                            <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
+                            <input type="password" required>
+                            <label>Password</label>
+                        </div>
+
+                        <button type="submit" class="btn" href="/home">Sign in</button>
+
+                        <div class="login-register">
+                            <p>Don't have an account? <a href="#" class="register-link">Sign up</a></p>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="form-box register">
+                    <form action="/register">
+                        <h2>Sign Up</h2>
+
+                        <div class="input-box">
+                            <span class="icon"><i class='bx bx-user-pin' ></i></span>
+                            <input type="username" required>
+                            <label>Username</label>
+                        </div>
+
+                        <div class="input-box">
+                            <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
+                            <input type="password" required>
+                            <label>Password</label>
+                        </div>
+
+                        <div class="remember-forgot">
+                            <label><input type="checkbox">I agree to the terms & conditions</label>
+                            
+                        </div>
+
+                        <button type="submit" class="btn">Sign up</button>
+
+                        <div class="login-register">
+                            <p>Already have an account? <a href="#" class="login-link">Sign in</a></p>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <script>
+            const logregBox = document.querySelector('.logreg-box');
+            const loginLink = document.querySelector('.login-link');
+            const registerLink = document.querySelector('.register-link');
+
+            registerLink.addEventListener('click', () => {
+                logregBox.classList.add('active');
+            });
+
+            loginLink.addEventListener('click', () => {
+                logregBox.classList.remove('active');
+            });
+        </script>
 </main>
 
 <%- include ('../partials/footer') %>

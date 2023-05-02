@@ -10,6 +10,7 @@ const session = require('express-session'); // To set the session object. To sto
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios');
 const {response} = require("express"); // To make HTTP requests from our server. We'll learn more about it in Part B.
+const path = require('path');
 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
@@ -57,6 +58,8 @@ app.use(
         extended: true,
     })
 );
+
+app.use(express.static(path.join(__dirname, "resources")));
 
 const user = {
     username: undefined,
@@ -547,7 +550,7 @@ app.post("/login", async (req, res) => {
         .catch((err) => {
             console.log(err);
             res.locals.message = "Login failed.";
-            res.render("pages/register");
+            res.render("pages/login");
         });
 });
 
@@ -569,6 +572,10 @@ app.get('/home', (req,res) => {
 
 app.get('/find', (req,res) => {
     res.render("pages/find");
+});
+
+app.get('/profile', (req,res) => {
+    res.render("pages/profile");
 });
 
 app.get('/logout', (req,res) => {
