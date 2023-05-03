@@ -252,3 +252,11 @@ header {
     justify-content: center;
     height: 100vh;
   }
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: rgb(176, 250, 181);
+    padding: 5px 0;
+}

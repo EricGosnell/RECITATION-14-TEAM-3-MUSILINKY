@@ -1,0 +1,25 @@
+Group Meeting Logs (Not TA Meetings)
+
+Minutes of the Meeting - 4/18/23
+
+  1) At the start of the meeting, we mostly worked together on code, asking questions, trying to get to the bottom of why some features weren't working properly, etc.
+  2) Established tasks for each group member to work on for the rest of the week
+  3) Discussed which group members were going to focus on Lab 11, the test cases and how to balance that workload with commits for the week
+  4) Updated project board as a group and decided which user stories to focus on the most this week
+
+Minutes of the Meeting - 4/25/23
+
+  1) Talked about each group member's tasks for the upcoming week / what they should be working on
+  2) Certain group members got help from each other on issues they were having with code snippets written earlier in the week
+  3) Talked about what the CSS should look like across the page
+  4) Talked about communication issues and strategies to improve communication the upcoming week
+  5) WOrked together to deal with issue with the playlist file
+
+Minutes of the Meeting - 5/2/23
+
+  1) Go to office hours later today to fix issues with CSS and other small errors
+  2) Devised a plan to complete the presentation slides and final project report
+  3) Worked together to merge different branches into main and ensure there are no merge conflicts
+  4) Worked together on some fianl features and bug fixes for the project, specifically on the backend
+  5) Got the group's opinion on certain style changes on CSS
+  6) Worked together to compose the TA meeting email to turn in before the end of the meeting
