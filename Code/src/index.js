@@ -916,6 +916,103 @@ app.get('/logout', (req,res) => {
     res.render('pages/login');
 });
 
+//======================================================
+// Communities
+//======================================================
+
+
+app.get('/communities', async (req, res) => {
+    try {
+      const communityNamesQuery = 'SELECT community_name FROM communities;';
+      const communitiesResult = await db.any(communityNamesQuery);
+      const communityNames = communitiesResult.map(row => row.community_name);
+  
+      const locals = { communityNames, db };
+      const communityMembersPromises = communityNames.map(async communityName => {
+        const membersQuery = 'SELECT username FROM communities_users WHERE community_name = $1;';
+        const membersResult = await db.any(membersQuery, [communityName]);
+        return { name: communityName, members: membersResult.map(row => row.username) };
+      });
+      const communityMembers = await Promise.all(communityMembersPromises);
+      locals.communityMembers = communityMembers;
+  
+      res.render('pages/communities', { locals });
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
+  });
+  
+  
+
+app.post('/communities/add', async (req,res) => {
+
+    const addCommunity = 'INSERT INTO communities (community_name, community_owner) VALUES ($1, $2);';
+
+    await db.any(addCommunity, [
+        req.body.communityName,
+        req.session.user.username
+    ])
+
+    .then(function (data) {
+        res.redirect('/communities');
+    })
+    .catch(function (err) {
+        return console.log(err);
+    });
+});
+
+app.post('/communities/join', async (req, res) => {
+    const communityName = req.body.community_name;
+    const username = req.session.user.username;
+  
+    try {
+      // Check if user already joined the community
+      const checkMembership = 'SELECT * FROM communities_users WHERE username = $1 AND community_name = $2;';
+      const membershipResult = await db.any(checkMembership, [username, communityName]);
+      if (membershipResult.length > 0) {
+        console.log(`User ${username} is already a member of ${communityName}.`);
+        //req.session.message = 'You are already a member of this community';
+        res.redirect('/communities');
+        return;
+      }
+
+      const joinCommunity = 'INSERT INTO communities_users (username, community_name) VALUES ($1, $2);';
+      await db.any(joinCommunity, [username, communityName]);
+      //req.session.message = 'You have successfully joined the community!';
+      res.redirect('/communities');
+    } catch (err) {
+      console.log(err);
+      res.redirect('/communities');
+    }
+  });
+  
+app.post('/communities/leave', async (req,res) =>{
+    const communityName = req.body.community_name;
+    const username = req.session.user.username;
+
+    const checkMembershipQuery = 'SELECT * FROM communities_users WHERE username = $1 AND community_name = $2;';
+    const leaveCommunityQuery = 'DELETE FROM communities_users WHERE username = $1 AND community_name = $2;';
+
+    db.any(checkMembershipQuery, [username, communityName])
+        .then((result) => {
+        if (result.length === 0) {
+            console.log(`User ${username} is not a member of ${communityName}.`);
+            res.redirect('/communities')
+            return;
+        }
+
+        return db.any(leaveCommunityQuery, [username, communityName]);
+        })
+        .then(() => {
+        res.redirect('/communities')
+        })
+        .catch((error) => {
+        console.log(error);
+        res.status(500).send('Internal server error');
+        });
+});
+
 // *****************************************************
 // <!-- Section 5 : Start Server-->
 // *****************************************************

@@ -2,6 +2,8 @@
 -- DROP TABLE IF EXISTS playlists CASCADE;
 -- DROP TABLE IF EXISTS connections CASCADE;
 -- DROP TABLE IF EXISTS users_to_playlists CASCADE;
+-- DROP TABLE IF EXISTS communities CASCADE;
+-- DROP TABLE IF EXISTS users_to_communities CASCADE;
 
 CREATE TABLE IF NOT EXISTS users (
     user_id SERIAL NOT NULL,
@@ -35,4 +37,13 @@ CREATE TABLE IF NOT EXISTS user_playlist(
     song_link TEXT
 );
 
+CREATE TABLE IF NOT EXISTS communities(
+    community_id SERIAL PRIMARY KEY NOT NULL,
+    community_name VARCHAR(50) NOT NULL,
+    community_owner VARCHAR(50) NOT NULL
+);
 
+CREATE TABLE IF NOT EXISTS communities_users(
+    username VARCHAR(50) NOT NULL,
+    community_name VARCHAR(50) NOT NULL
+);

@@ -1,0 +1,68 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+
+
+<main>
+    <body>
+        <div class="wrapper">
+            <h1>Communities</h1>
+            <h2><span>Welcome to the communities page! Join or create a community to find new friends!</span></h2>
+          
+            <div class="form-container">
+              <form method="POST" action="/communities/add">
+                <div class="form-group">
+                  <label for="communityName">Choose a name for your new community:</label>
+                  <input type="text" class="form-control" id="communityName" name="communityName" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Community</button>
+              </form>
+            </div>
+
+            <hr>
+
+          <% if (!locals.communityNames || locals.communityNames.length === 0) { %>
+            <p>No communities have been created.</p>
+          <% } else { %>
+
+          <table class="table">
+            <tbody>
+              <% for (let i = 0; i < locals.communityNames.length; i++) { %>
+                <tr>
+                  <td><h3><%= locals.communityNames[i] %></h3></td>
+                  <td>
+                    <form method="post" action="communities/join">
+                      <input type="hidden" name="community_name" value="<%= locals.communityNames[i]%>">
+                      <button type="submit" class="btn btn-primary">Join</button>
+                    </form>
+                  </td>
+                  <td>
+                    <form method="post" action="communities/leave">
+                      <input type="hidden" name="community_name" value="<%= locals.communityNames[i]%>">
+                      <button type="submit" class="btn btn-primary">Leave</button>
+                    </form>
+                  </td>
+                </tr>
+
+                <%    
+
+                  // Display the community members in a nested loop
+                  for (let j = 0; j < locals.communityMembers.length; j++) { 
+                    console.log("Comm members:", locals.communityMembers);
+                    if (locals.communityMembers[j].name == locals.communityNames[i]){
+                    %>
+                    <tr>
+                      <td><%= locals.communityMembers[j].members %></td>
+                    </tr>
+                    <% } %>
+                    <% } %>
+              <% }; %>
+            </tbody>
+          </table>
+
+          <% } %>
+
+        </div>
+    </body>
+  </main>
+
+<%- include ('../partials/footer') %>
