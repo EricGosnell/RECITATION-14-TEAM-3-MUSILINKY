@@ -232,7 +232,9 @@ app.get('/MUSALINK', async (req, res) => {
     let artist_name = '';
   
     let album_name = '';
-  
+
+    const deezer_regex = /(https:\/\/www\.deezer\.com(\/us)?\/track\/.+)/;
+
     try {
       // Getting links for songs on other platforms from Spotify track URL
       if (musalink_query.includes('https://open.spotify.com/track/')) {
@@ -524,25 +526,22 @@ app.get('/MUSALINK', async (req, res) => {
         else if (musalink_query.includes('https://soundcloud.com')) {
 
         const soundcloud_music_query = await axios({
-        method: 'POST',
-        url: 'https://musicapi13.p.rapidapi.com/inspect/url',
-        headers: {
-            'content-type': 'application/json',
-            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
-            'X-RapidAPI-Host': 'musicapi13.p.rapidapi.com'
-        },
-        data: {
+          method: 'GET',
+          url: 'https://soundcloud-downloader4.p.rapidapi.com/soundcloud/track',
+          params: {
             url: musalink_query
-        }
-        });
+          },
+          headers: {
+            'X-RapidAPI-Key': process.env.API_KEY_MUSALINK,
+            'X-RapidAPI-Host': 'soundcloud-downloader4.p.rapidapi.com'
+          }
+        });        
 
-        track_name = soundcloud_music_query.data.data.name;
+        track_name = soundcloud_music_query.data.music.title;
 
-        if (soundcloud_music_query.data.data.artistNames !== null) {
-        artist_name = soundcloud_music_query.data.data.artistNames[0];
-        }
+        artist_name = soundcloud_music_query.data.users.username;
 
-        album_name = soundcloud_music_query.data.data.albumName;
+        album_name = undefined;
 
         const spotify_query = await axios({
         method: 'GET',
@@ -619,7 +618,8 @@ app.get('/MUSALINK', async (req, res) => {
         });
     }
 
-    else if (musalink_query.includes('https://www.deezer.com/us/track/')) {
+    // Getting song links from Deezer URL
+    else if (deezer_regex.test(musalink_query)) {
 
       const deezer_query = await axios({
         method: 'POST',
@@ -716,6 +716,10 @@ app.get('/MUSALINK', async (req, res) => {
               username: user.username
           });
         
+    }
+
+    else {
+      throw new error('Could not retrieve links. Please enter a valid URL.');
     }
 
 }
