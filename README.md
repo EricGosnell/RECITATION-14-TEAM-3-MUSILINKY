@@ -54,7 +54,9 @@ Cade Williams | CadeBW | cawi6141@colorado.edu
                   "express": "^4.6.1",
                   "pg-promise": "^10.11.1",
                   "body-parser": "1.20.0",
-                  "express-session": "1.17.3"
+                  "express-session": "1.17.3",
+                  "bcrypt": "^5.1.0",
+                  "axios": "^1.1.3"
                 },
                 "devDependencies": {
                   "nodemon": "^2.0.7",
